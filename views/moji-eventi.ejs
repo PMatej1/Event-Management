@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Moji Eventi</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+            padding: 20px;
+        }
+        .container {
+            margin-top: 50px;
+        }
+        .navbar {
+            margin-bottom: 20px;
+        }
+        .card-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .card {
+            width: 60%;
+            margin-bottom: 20px;
+        }
+        .status {
+            display: inline-block;
+            width: 15px;
+            height: 15px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+        .status.confirmed {
+            background-color: green;
+        }
+        .status.rejected {
+            background-color: red;
+        }
+        .status.pending {
+            background-color: grey;
+        }
+        .btn-cancel {
+            background-color: #dc3545;
+            color: #fff;
+        }
+        .btn-cancel:hover {
+            background-color: #c82333;
+            color: #fff;
+        }
+        .btn-rate {
+            background-color: #007bff;
+            color: #fff;
+        }
+        .btn-rate:hover {
+            background-color: #0056b3;
+            color: #fff;
+        }
+        .star-rating {
+            display: flex;
+            justify-content: center;
+        }
+        .star {
+            font-size: 2em;
+            color: grey;
+            cursor: pointer;
+        }
+        .star.checked {
+            color: gold;
+        }
+    </style>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <a class="navbar-brand" href="/">Event Management</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item">
+                <a class="nav-link" href="/profil">Profil</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/events">Eventi</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/korisnik/moji-eventi">Moji Eventi</a>
+            </li>
+        </ul>
+        <form class="form-inline my-2 my-lg-0" action="/korisnik/rezultati-searcha" method="post">
+            <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" name="kljucnaRijec">
+            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+        </form>
+    </div>
+</nav>
+
+<div class="container">
+    <h1 class="text-center">Moji Eventi</h1>
+    <div class="card-wrapper">
+        <% mojiEventi.forEach(function(event) { %>
+            <div class="card">
+                <div class="card-body" data-event-date="<%= event.datum %>">
+                    <h5 class="card-title"><%= event.naziv %></h5>
+                    <p class="card-text"><%= event.opis %></p>
+                    <p class="card-text"><small class="text-muted">Datum: <%= event.datum %></small></p>
+                    <p class="card-text"><small class="text-muted">Lokacija: <%= event.mjesto %></small></p>
+                    <p class="card-text"><small class="text-muted">Cijena: <%= event.cijena %> KM</small></p>
+                    <p class="card-text">
+                        <span class="status <%= event.status === 'odobren' ? 'confirmed' : event.status === 'odbijen' ? 'rejected' : 'pending' %>"></span>
+                        <%= event.status.charAt(0).toUpperCase() + event.status.slice(1) %>
+                    </p>
+                    <% if (event.status === 'odobren') { %>
+                        <form action="/korisnik/otkazi-prijavu/<%= event.id %>" method="POST" style="display:inline;">
+                            <button type="submit" class="btn btn-cancel btn-sm cancel-btn">Otkaži prijavu</button>
+                        </form>
+                        <button type="button" class="btn btn-rate btn-sm rate-btn" data-toggle="modal" data-target="#rateModal" style="display:none;" data-event-id="<%= event.id %>">Ocijeni</button>
+                    <% } %>
+                </div>
+            </div>
+        <% }) %>
+    </div>
+</div>
+
+<!-- Rate Modal -->
+<div class="modal fade" id="rateModal" tabindex="-1" role="dialog" aria-labelledby="rateModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="rateModalLabel">Ocijeni Event</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form action="/korisnik/ocijeni-event" method="POST" id="rateForm">
+                    <input type="hidden" name="eventId" id="rateEventId">
+                    <div class="form-group">
+                        <label for="rating">Ocjena:</label>
+                        <div id="starRating" class="star-rating">
+                            <% for (let i = 1; i <= 5; i++) { %>
+                                <span class="star" data-value="<%= i %>">&bigstar;</span>
+                            <% } %>
+                        </div>
+                        <input type="hidden" name="rating" id="ratingValue">
+                    </div>
+                    <div class="form-group">
+                        <label for="comment">Komentar:</label>
+                        <textarea class="form-control" id="comment" name="comment" rows="3"></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Pošalji</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Bootstrap JS and dependencies -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const cards = document.querySelectorAll('.card-body');
+        const today = new Date();
+
+        cards.forEach(card => {
+            const eventDate = new Date(card.getAttribute('data-event-date'));
+            const cancelButton = card.querySelector('.cancel-btn');
+            const rateButton = card.querySelector('.rate-btn');
+
+            if (eventDate <= today) {
+                cancelButton.style.display = 'none';
+                rateButton.style.display = 'inline';
+            }
+        });
+
+        $('#rateModal').on('show.bs.modal', function (event) {
+            const button = $(event.relatedTarget);
+            const eventId = button.data('event-id');
+            const modal = $(this);
+            modal.find('#rateEventId').val(eventId);
+        });
+
+        const stars = document.querySelectorAll('.star');
+        stars.forEach(star => {
+            star.addEventListener('click', function() {
+                const value = this.getAttribute('data-value');
+                document.getElementById('ratingValue').value = value;
+
+                stars.forEach(s => s.classList.remove('checked'));
+                for (let i = 0; i < value; i++) {
+                    stars[i].classList.add('checked');
+                }
+            });
+        });
+    });
+</script>
+</body>
+</html>

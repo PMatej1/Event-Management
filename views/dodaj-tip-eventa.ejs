@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dodaj Tip Eventa</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+            padding: 20px;
+        }
+        .container {
+            margin-top: 50px;
+        }
+        .back-button {
+            cursor: pointer;
+            color: #007bff;
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+        .back-button:hover {
+            color: #0056b3;
+        }
+        .btn-delete {
+            color: #fff;
+            background-color: #dc3545;
+            border-color: #dc3545;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <a href="/admin">
+        <i class="fas fa-arrow-left"></i> Nazad
+    </a>
+    <h1 class="text-center">Dodaj Tip Eventa</h1>
+    <form action="/admin/dodaj-tip-eventa" method="POST">
+        <div class="form-group">
+            <label for="naziv">Naziv Tip Eventa</label>
+            <input type="text" class="form-control" id="naziv" name="naziv" placeholder="Unesite naziv tipa eventa" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Dodaj</button>
+    </form>
+
+    <div class="table-responsive">
+        <table class="table table-bordered table-striped">
+            <thead class="thead-dark">
+            <tr>
+                <th>Naziv Tip Eventa</th>
+                <th>Akcija</th>
+            </tr>
+            </thead>
+            <tbody>
+            <% tip_eventa.forEach(function(tip) { %>
+                <tr>
+                    <td><%= tip.naziv_tipa %></td>
+                    <td>
+                        <form action="/admin/delete-tip-eventa/<%= tip.id %>" method="POST" style="display:inline;">
+                            <button type="submit" class="btn btn-delete btn-sm">Delete</button>
+                        </form>
+                        <button type="button" class="btn btn-warning btn-sm" data-toggle="modal" data-target="#editModal<%= tip.id %>">Uredi</button>
+
+                        <!-- Modal za uređivanje -->
+                        <div class="modal fade" id="editModal<%= tip.id %>" tabindex="-1" role="dialog" aria-labelledby="editModalLabel<%= tip.id %>" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="editModalLabel<%= tip.id %>">Uredi Tip Eventa</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <form action="/admin/edit-tip-eventa/<%= tip.id %>" method="POST">
+                                            <div class="form-group">
+                                                <label for="naziv<%= tip.id %>">Naziv Tip Eventa</label>
+                                                <input type="text" class="form-control" id="naziv<%= tip.id %>" name="naziv" value="<%= tip.naziv_tipa %>" required>
+                                            </div>
+                                            <button type="submit" class="btn btn-primary">Spremi</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            <% }) %>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Bootstrap JS and dependencies -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

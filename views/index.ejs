@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Event Management</title>
+  <style>
+    /* Resetovanje osnovnih stilova */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    /* Stilizacija tela i pozadinske slike */
+    body {
+      font-family: Arial, sans-serif;
+      color: #333;
+      background: url("https://t3.ftcdn.net/jpg/07/33/50/26/360_F_733502690_GYuQrHyM4W7xxhRW0UPGrySJxJoRnNz4.jpg");
+    }
+
+    /* Navigacioni bar */
+    .navbar {
+      width: 100%;
+      display: flex;
+      justify-content: end;
+      align-items: center;
+      padding: 20px;
+
+    }
+
+    .navbar a {
+      text-decoration: none;
+      color: #333;
+      padding: 10px 20px;
+      border-radius: 5px;
+      background-color: white;
+    }
+
+    .navbar a:hover {
+      background: #f0f0f0;
+    }
+
+    /* Stilizacija glavne sekcije */
+    .main {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      padding: 50px;
+      background: rgba(255, 255, 255, 0.9);
+      margin: 20px;
+      border-radius: 10px;
+    }
+
+    .main h1 {
+      margin-bottom: 20px;
+      font-size: 36px;
+    }
+
+    .main p {
+      margin-bottom: 30px;
+      font-size: 18px;
+    }
+
+    .btn {
+      padding: 10px 20px;
+      font-size: 18px;
+      color: #fff;
+      background-color: #333;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .btn:hover {
+      background-color: #555;
+    }
+
+    /* Sekcije za događaje i organizatore */
+    .events, .organizers {
+      margin: 20px;
+      padding: 20px;
+      background: rgba(255, 255, 255, 0.9);
+      border-radius: 10px;
+    }
+
+    .section-title {
+      margin-bottom: 20px;
+      font-size: 28px;
+      text-align: center;
+    }
+
+    .event, .organizer {
+      margin: 10px 0;
+    }
+
+    @media (max-width: 768px) {
+      .main h1 {
+        font-size: 28px;
+      }
+
+      .main p {
+        font-size: 16px;
+      }
+
+      .btn {
+        font-size: 16px;
+      }
+    }
+  </style>
+</head>
+<body>
+<!-- Navigacioni bar -->
+<div class="navbar">
+  <div>
+    <a href="http://localhost:3000/login">Login</a>
+    <a href="/register">Register</a>
+  </div>
+</div>
+
+<!-- Glavna sekcija -->
+<div class="main">
+  <h1>Dobrodošli na Event Management Platformu</h1>
+  <p>Prijavite se na događaje ili postavite svoje događaje i povežite se sa učesnicima!</p>
+  <a href="/register" class="btn">Prijavi se sada</a>
+</div>
+
+<!-- Sekcija za događaje -->
+<div class="events">
+  <h2 class="section-title">Nadolazeći Događaji</h2>
+  <div class="event">
+    <h3>Konferencija o Tehnologiji</h3>
+    <p>Datum: 10. Avgust 2024</p>
+    <p>Lokacija: Beograd, Srbija</p>
+  </div>
+  <div class="event">
+    <h3>Muzički Festival</h3>
+    <p>Datum: 15. Avgust 2024</p>
+    <p>Lokacija: Novi Sad, Srbija</p>
+  </div>
+</div>
+
+<!-- Sekcija za organizatore -->
+<div class="organizers">
+  <h2 class="section-title">Istaknuti Organizatori</h2>
+  <div class="organizer">
+    <h3>Tehnološki Inkubator</h3>
+    <p>Organizator Tehnoloških Događaja</p>
+  </div>
+  <div class="organizer">
+    <h3>Muzička Asocijacija</h3>
+    <p>Organizator Muzičkih Događaja</p>
+  </div>
+</div>
+</body>
+</html>

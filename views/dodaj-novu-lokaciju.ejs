@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dodaj Novu Lokaciju</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <!-- Font Awesome CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+        }
+        .container {
+            margin-top: 50px;
+        }
+        #map {
+            height: 400px;
+            width: 100%;
+            margin-bottom: 20px;
+        }
+        .back-button {
+            cursor: pointer;
+            color: #007bff;
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+        .back-button:hover {
+            color: #0056b3;
+        }
+        .btn-delete {
+            color: #fff;
+            background-color: #dc3545;
+            border-color: #dc3545;
+        }
+        .btn-edit {
+            color: #fff;
+            background-color: #ffc107;
+            border-color: #ffc107;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="back-button" onclick="window.location.href='/admin'">
+        <i class="fas fa-arrow-left"></i> Nazad
+    </div>
+    <h1 class="text-center">Dodaj Novu Lokaciju</h1>
+    <form action="/admin/dodaj-novu-lokaciju" method="POST">
+        <div class="form-group">
+            <label for="naziv">Naziv Lokacije</label>
+            <input type="text" class="form-control" id="naziv" name="naziv" placeholder="Unesite naziv lokacije" required>
+        </div>
+        <div id="map"></div>
+        <input type="hidden" id="latitude" name="latitude" required>
+        <input type="hidden" id="longitude" name="longitude" required>
+        <button type="submit" class="btn btn-primary">Dodaj</button>
+    </form>
+    <h1 class="text-center">Pregled postojećih lokacija</h1>
+    <div class="table-responsive">
+        <table class="table table-bordered table-striped">
+            <thead class="thead-dark">
+            <tr>
+                <th>Naziv</th>
+                <th>Grad</th>
+                <th>Ulica</th>
+                <th>Poštanski broj</th>
+                <th>Akcija</th>
+            </tr>
+            </thead>
+            <tbody>
+            <% trenutne_lokacije.forEach(function(lokacija) { %>
+                <tr>
+                    <td><%= lokacija.naziv %></td>
+                    <td><%= lokacija.grad %></td>
+                    <td><%= lokacija.ulica %></td>
+                    <td><%= lokacija.postanski_broj %></td>
+                    <td>
+                        <form action="/admin/delete-lokacija/<%= lokacija.id %>" method="POST" style="display:inline;">
+                            <button type="submit" class="btn btn-delete btn-sm">Delete</button>
+                        </form>
+                        <button type="button" class="btn btn-edit btn-sm" data-toggle="modal" data-target="#editModal"
+                                data-id="<%= lokacija.id %>"
+                                data-naziv="<%= lokacija.naziv %>"
+                                data-grad="<%= lokacija.grad %>"
+                                data-ulica="<%= lokacija.ulica %>"
+                                data-postanski_broj="<%= lokacija.postanski_broj %>"
+                                data-latitude="<%= lokacija.latitude %>"
+                                data-longitude="<%= lokacija.longitude %>">
+                            Uredi
+                        </button>
+                    </td>
+                </tr>
+            <% }) %>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Edit Modal -->
+<div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <form action="/admin/update-lokacija" method="POST">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editModalLabel">Uredi Lokaciju</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="modal-naziv">Naziv Lokacije</label>
+                        <input type="text" class="form-control" id="modal-naziv" name="naziv" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="modal-grad">Grad</label>
+                        <input type="text" class="form-control" id="modal-grad" name="grad" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="modal-ulica">Ulica</label>
+                        <input type="text" class="form-control" id="modal-ulica" name="ulica" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="modal-postanski_broj">Poštanski broj</label>
+                        <input type="text" class="form-control" id="modal-postanski_broj" name="postanski_broj" required>
+                    </div>
+
+                    <input type="hidden" id="modal-id" name="id" required>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Zatvori</button>
+                    <button type="submit" class="btn btn-primary">Uredi</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Bootstrap JS and dependencies -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<!-- Leaflet JS -->
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+<script>
+    // Initialize the map
+    var map = L.map('map').setView([43.8563, 18.4131], 13); // Default to Sarajevo, Bosnia and Herzegovina
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    }).addTo(map);
+
+    var marker;
+
+    function onMapClick(e) {
+        if (marker) {
+            map.removeLayer(marker);
+        }
+        marker = L.marker(e.latlng).addTo(map);
+        document.getElementById('latitude').value = e.latlng.lat;
+        document.getElementById('longitude').value = e.latlng.lng;
+    }
+
+    map.on('click', onMapClick);
+
+    // Fill modal with current data
+    $('#editModal').on('show.bs.modal', function (event) {
+        var button = $(event.relatedTarget);
+        var id = button.data('id');
+        var naziv = button.data('naziv');
+        var grad = button.data('grad');
+        var ulica = button.data('ulica');
+        var postanski_broj = button.data('postanski_broj');
+        var latitude = button.data('latitude');
+        var longitude = button.data('longitude');
+
+        var modal = $(this);
+        modal.find('#modal-id').val(id);
+        modal.find('#modal-naziv').val(naziv);
+        modal.find('#modal-grad').val(grad);
+        modal.find('#modal-ulica').val(ulica);
+        modal.find('#modal-postanski_broj').val(postanski_broj);
+        modal.find('#modal-latitude').val(latitude);
+        modal.find('#modal-longitude').val(longitude);
+    });
+</script>
+
+</body>
+</html>

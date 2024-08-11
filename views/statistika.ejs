@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Statistika</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            display: flex;
+            min-height: 100vh;
+            flex-direction: column;
+        }
+        .container {
+            flex: 1;
+        }
+        .sidebar {
+            height: 100%;
+            padding: 20px;
+            background-color: #f8f9fa;
+            border-right: 1px solid #dee2e6;
+        }
+        .sidebar a {
+            display: block;
+            padding: 10px 15px;
+            margin-bottom: 10px;
+            color: #000;
+            text-decoration: none;
+        }
+        .sidebar a:hover {
+            background-color: #007bff;
+            color: #fff;
+        }
+        .main-content {
+            padding: 20px;
+            flex: 1;
+        }
+        .chart-container {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <a class="navbar-brand" href="#">Event Management</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ml-auto">
+            <li class="nav-item">
+                <a class="nav-link" href="/admin">Početna</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/admin/statistika">Statistika</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/admin/dodaj-tip-eventa">Dodaj tip eventa</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/admin/dodaj-novu-lokaciju">Dodaj novu lokaciju</a>
+            </li>
+        </ul>
+    </div>
+</nav>
+
+<div class="d-flex">
+    <div class="sidebar">
+        <h4>Statistika</h4>
+        <a href="#ukupniPodaci">Ukupni podaci</a>
+        <a href="#nadolazeciEventi">Nadolazeći eventi</a>
+        <a href="#zavrseniEventi">Završeni eventi</a>
+        <a href="#organizatori">Organizatori</a>
+        <a href="#korisnici">Korisnici</a>
+        <a href="#gradovi">Gradovi</a>
+        <a href="#tipoviEvenata">Tipovi evenata</a>
+    </div>
+    <div class="main-content">
+        <div class="container">
+            <h1 class="text-center">Statistika</h1>
+
+            <!-- Ukupni podaci -->
+            <div id="ukupniPodaci" class="chart-container">
+                <h3>Ukupni podaci</h3>
+                <canvas id="ukupniPodaciChart"></canvas>
+            </div>
+
+            <!-- Nadolazeći eventi -->
+            <div id="nadolazeciEventi" class="chart-container">
+                <h3>Nadolazeći eventi sa najviše prijava</h3>
+                <canvas id="nadolazeciEventiChart"></canvas>
+            </div>
+
+            <!-- Završeni eventi -->
+            <div id="zavrseniEventi" class="chart-container">
+                <h3>Završeni eventi sa najviše prijava</h3>
+                <canvas id="zavrseniEventiChart"></canvas>
+            </div>
+
+            <!-- Organizatori -->
+            <div id="organizatori" class="chart-container">
+                <h3>Organizatori sa najviše evenata</h3>
+                <canvas id="organizatoriChart"></canvas>
+            </div>
+
+            <!-- Korisnici -->
+            <div id="korisnici" class="chart-container">
+                <h3>Korisnici sa najviše prihvatanja i odbijanja</h3>
+                <canvas id="korisniciChart"></canvas>
+            </div>
+
+            <!-- Gradovi -->
+            <div id="gradovi" class="chart-container">
+                <h3>Gradovi sa najviše evenata</h3>
+                <canvas id="gradoviChart"></canvas>
+            </div>
+
+            <!-- Tipovi evenata -->
+            <div id="tipoviEvenata" class="chart-container">
+                <h3>Tipovi evenata sa najviše evenata</h3>
+                <canvas id="tipoviEvenataChart"></canvas>
+            </div>
+
+            <!-- Najbolje ocijenjeni eventi -->
+            <div id="najboljeOcijenjeniEventi" class="chart-container">
+                <h3>Najbolje ocijenjeni eventi</h3>
+                <canvas id="najboljeOcijenjeniEventiChart"></canvas>
+            </div>
+
+            <!-- Tipovi evenata za koje se korisnici odlučuju najviše -->
+            <div id="tipoviEvenataZaKojeSeKorisniciOdlucujuNajvise" class="chart-container">
+                <h3>Tipovi evenata za koje se korisnici odlučuju najviše</h3>
+                <canvas id="tipoviEvenataZaKojeSeKorisniciOdlucujuNajviseChart"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Bootstrap JS and dependencies -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script>
+    const brojKorisnika = <%= brojKorisnika %>;
+    const brojOrganizatora = <%= brojOrganizatora %>;
+    const brojDogadjaja = <%= brojDogadjaja %>;
+    const brojPrijava = <%= brojPrijava %>;
+
+    const nadolazeciEventiSaNajvisePrijava = JSON.parse('<%- nadolazeciEventiSaNajvisePrijava %>');
+    const zavrseniEventiSaNajvisePrijava = JSON.parse('<%- zavrseniEventiSaNajvisePrijava %>');
+    const organizatorSaNajviseEvenata = JSON.parse('<%- organizatorSaNajviseEvenata %>');
+    const korisnikSaNajvisePrihvatanja = JSON.parse('<%- korisnikSaNajvisePrihvatanja %>');
+    const korisnikSaNajviseOdbijanja = JSON.parse('<%- korisnikSaNajviseOdbijanja %>');
+    const tipSaNajviseEvenata = JSON.parse('<%- tipSaNajviseEvenata %>');
+    const gradSaNajviseEvenata = JSON.parse('<%- gradSaNajviseEvenata %>');
+    const najboljeOcijenjeniEventi = JSON.parse('<%- najboljeOcijenjeniEventi %>');
+    const tipoviEvenataZaKojeSeKorisniciOdlucujuNajvise = JSON.parse('<%- tipoviEvenataZaKojeSeKorisniciOdlucujuNajvise %>');
+
+    // Primer generisanja grafikona
+    const ctxUkupniPodaci = document.getElementById('ukupniPodaciChart').getContext('2d');
+    new Chart(ctxUkupniPodaci, {
+        type: 'bar',
+        data: {
+            labels: ['Korisnici', 'Organizatori', 'Događaji', 'Prijave'],
+            datasets: [{
+                label: 'Ukupni podaci',
+                data: [brojKorisnika, brojOrganizatora, brojDogadjaja, brojPrijava],
+                backgroundColor: [
+                    'rgba(75, 192, 192, 0.2)',
+                    'rgba(54, 162, 235, 0.2)',
+                    'rgba(255, 206, 86, 0.2)',
+                    'rgba(153, 102, 255, 0.2)'
+                ],
+                borderColor: [
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 206, 86, 1)',
+                    'rgba(153, 102, 255, 1)'
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+
+    // Nadolazeći eventi sa najviše prijava
+    const ctxNadolazeciEventi = document.getElementById('nadolazeciEventiChart').getContext('2d');
+    new Chart(ctxNadolazeciEventi, {
+        type: 'bar',
+        data: {
+            labels: nadolazeciEventiSaNajvisePrijava.map(event => event.naziv),
+            datasets: [{
+                label: 'Nadolazeći eventi sa najviše prijava',
+                data: nadolazeciEventiSaNajvisePrijava.map(event => event.broj),
+                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                borderColor: 'rgba(75, 192, 192, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+
+
+    // Završeni eventi sa najviše prijava
+    const ctxZavrseniEventi = document.getElementById('zavrseniEventiChart').getContext('2d');
+    new Chart(ctxZavrseniEventi, {
+        type: 'bar',
+        data: {
+            labels: zavrseniEventiSaNajvisePrijava.map(event => event.naziv),
+            datasets: [{
+                label: 'Završeni eventi sa najviše prijava',
+                data: zavrseniEventiSaNajvisePrijava.map(event => event.broj),
+                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                borderColor: 'rgba(75, 192, 192, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+
+    // Organizatori sa najviše evenata
+    const ctxOrganizatori = document.getElementById('organizatoriChart').getContext('2d');
+    new Chart(ctxOrganizatori, {
+        type: 'bar',
+        data: {
+            labels: organizatorSaNajviseEvenata.map(org => org.korisnicko_ime),
+            datasets: [{
+                label: 'Organizatori sa najviše evenata',
+                data: organizatorSaNajviseEvenata.map(org => org.broj),
+                backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                borderColor: 'rgba(54, 162, 235, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+
+    // Korisnici sa najviše prihvatanja i odbijanja
+    const ctxKorisnici = document.getElementById('korisniciChart').getContext('2d');
+    new Chart(ctxKorisnici, {
+        type: 'bar',
+        data: {
+            labels: korisnikSaNajvisePrihvatanja.map(user => user.korisnicko_ime),
+            datasets: [{
+                label: 'Korisnici sa najviše prihvatanja',
+                data: korisnikSaNajvisePrihvatanja.map(user => user.broj),
+                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                borderColor: 'rgba(75, 192, 192, 1)',
+                borderWidth: 1
+            },
+                {
+                    label: 'Korisnici sa najviše odbijanja',
+                    data: korisnikSaNajviseOdbijanja.map(user => user.broj),
+                    backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                    borderColor: 'rgba(255, 99, 132, 1)',
+                    borderWidth: 1
+                }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+
+    // Gradovi sa najviše evenata
+    const ctxGradovi = document.getElementById('gradoviChart').getContext('2d');
+    new Chart(ctxGradovi, {
+        type: 'bar',
+        data: {
+            labels: gradSaNajviseEvenata.map(grad => grad.grad),
+            datasets: [{
+                label: 'Gradovi sa najviše evenata',
+                data: gradSaNajviseEvenata.map(grad => grad.broj),
+                backgroundColor: 'rgba(153, 102, 255, 0.2)',
+                borderColor: 'rgba(153, 102, 255, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+
+    // Tipovi evenata sa najviše evenata
+    const ctxTipoviEvenata = document.getElementById('tipoviEvenataChart').getContext('2d');
+    new Chart(ctxTipoviEvenata, {
+        type: 'bar',
+        data: {
+            labels: tipSaNajviseEvenata.map(tip => tip.naziv_tipa),
+            datasets: [{
+                label: 'Tipovi evenata sa najviše evenata',
+                data: tipSaNajviseEvenata.map(tip => tip.broj),
+                backgroundColor: 'rgba(255, 159, 64, 0.2)',
+                borderColor: 'rgba(255, 159, 64, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+
+    // Najbolje ocijenjeni eventi
+    const ctxNajboljeOcijenjeniEventi = document.getElementById('najboljeOcijenjeniEventiChart').getContext('2d');
+    new Chart(ctxNajboljeOcijenjeniEventi, {
+        type: 'bar',
+        data: {
+            labels: najboljeOcijenjeniEventi.map(event => event.naziv),
+            datasets: [{
+                label: 'Najbolje ocijenjeni eventi',
+                data: najboljeOcijenjeniEventi.map(event => event.prosjek),
+                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                borderColor: 'rgba(75, 192, 192, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+
+    // Tipovi evenata za koje se korisnici odlučuju najviše
+    const ctxTipoviEvenataZaKojeSeKorisniciOdlucujuNajvise = document.getElementById('tipoviEvenataZaKojeSeKorisniciOdlucujuNajviseChart').getContext('2d');
+    new Chart(ctxTipoviEvenataZaKojeSeKorisniciOdlucujuNajvise, {
+        type: 'bar',
+        data: {
+            labels: tipoviEvenataZaKojeSeKorisniciOdlucujuNajvise.map(tip => tip.naziv_tipa),
+            datasets: [{
+                label: 'Tipovi evenata za koje se korisnici odlučuju najviše',
+                data: tipoviEvenataZaKojeSeKorisniciOdlucujuNajvise.map(tip => tip.broj),
+                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                borderColor: 'rgba(75, 192, 192, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+
+</script>
+</body>
+</html>

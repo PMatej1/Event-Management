@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rezultati pretrage</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+            padding: 20px;
+        }
+        .container {
+            margin-top: 50px;
+        }
+        .navbar {
+            margin-bottom: 20px;
+        }
+        .btn-filter {
+            margin-right: 10px;
+        }
+        .card-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .card {
+            width: 60%;
+            margin-bottom: 20px;
+        }
+        .btn-register {
+            background-color: #007bff;
+            color: #fff;
+        }
+        .btn-register:hover {
+            background-color: #0056b3;
+            color: #fff;
+        }
+    </style>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <a class="navbar-brand" href="/">Event Management</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item">
+                <a class="nav-link" href="/profil">Profil</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/events">Eventi</a>
+            </li>
+        </ul>
+        <form class="form-inline my-2 my-lg-0" action="/rezultati-searcha" method="GET">
+            <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" name="query">
+            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+        </form>
+    </div>
+</nav>
+
+<div class="container">
+    <h1 class="text-center">Rezultati pretrage</h1>
+    <div class="text-center">
+        <button class="btn btn-filter btn-outline-primary" onclick="showResults('korisnici')">Korisnici</button>
+        <button class="btn btn-filter btn-outline-primary" onclick="showResults('lokacije')">Lokacije</button>
+        <button class="btn btn-filter btn-outline-primary" onclick="showResults('eventi')">Eventi</button>
+    </div>
+    <div id="korisnici" class="card-wrapper" style="display: none;">
+        <% if (korisnici.length > 0) { korisnici.forEach(function(korisnik) { %>
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title"><%= korisnik.ime %> <%= korisnik.prezime %></h5>
+                    <p class="card-text"><small class="text-muted">@<%= korisnik.korisnicko_ime %></small></p>
+                    <a href="#" onclick="showOrganizerEvents('<%= korisnik.id %>')" class="stretched-link"></a>
+                </div>
+            </div>
+        <% }) } %>
+    </div>
+    <div id="lokacije" class="card-wrapper" style="display: none;">
+        <% if (lokacije.length > 0) { lokacije.forEach(function(lokacija) { %>
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title"><%= lokacija.naziv %></h5>
+                    <p class="card-text"><%= lokacija.ulica %>, <%= lokacija.grad %></p>
+                    <a href="#" onclick="showLocationEvents('<%= lokacija.id %>')" class="stretched-link"></a>
+                </div>
+            </div>
+        <% }) } %>
+    </div>
+    <div id="eventi" class="card-wrapper" style="display: none;">
+        <% if (eventi.length > 0) { eventi.forEach(function(event) { %>
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title"><%= event.naziv %></h5>
+                    <p class="card-text"><%= event.opis %></p>
+                    <p class="card-text"><small class="text-muted">Datum: <%= event.datum %></small></p>
+                    <p class="card-text"><small class="text-muted">Lokacija: <%= event.mjesto %></small></p>
+                    <p class="card-text"><small class="text-muted">Cijena: <%= event.cijena %> KM</small></p>
+                    <form action="/korisnik/prijava-na-event/<%= event.id %>" method="POST" style="display:inline;">
+                        <button type="submit" class="btn btn-register btn-sm">Prijavi se</button>
+                    </form>
+                </div>
+            </div>
+        <% }) } %>
+    </div>
+</div>
+
+<!-- Bootstrap JS and dependencies -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script>
+    function showResults(category) {
+        document.getElementById('korisnici').style.display = 'none';
+        document.getElementById('lokacije').style.display = 'none';
+        document.getElementById('eventi').style.display = 'none';
+        document.getElementById(category).style.display = 'block';
+    }
+
+    function showLocationEvents(locationId) {
+        window.location.href = '/korisnik/lokacija/'  + 'eventi/'+locationId;
+    }
+
+    function showOrganizerEvents(organizerId) {
+        window.location.href = '/korisnik'  + '/eventi/'+ organizerId;
+    }
+</script>
+</body>
+</html>

@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detalji Eventa</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+            padding: 20px;
+        }
+        .container {
+            margin-top: 50px;
+        }
+        .btn-obrada {
+            background-color: #ffc107;
+            color: #fff;
+        }
+        .btn-odobren {
+            background-color: #28a745;
+            color: #fff;
+        }
+        .btn-odbijen {
+            background-color: #dc3545;
+            color: #fff;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1 class="text-center">Detalji Eventa</h1>
+    <div class="card">
+        <div class="card-header">
+            <h2><%= event.rows[0].naziv %></h2>
+        </div>
+        <div class="card-body">
+            <p><strong>Opis:</strong> <%= event.rows[0].opis %></p>
+            <p><strong>Datum:</strong> <%= event.rows[0].datum %></p>
+            <p><strong>Cijena:</strong> <%= event.rows[0].cijena %></p>
+            <p><strong>Status:</strong> <%= event.rows[0].status %></p>
+            <p><strong>Lokacija:</strong> <%= event.rows[0].mjesto %></p>
+            <p><strong>Tip:</strong> <%= event.rows[0].tip %></p>
+        </div>
+    </div>
+
+    <h2 class="text-center mt-5">Spisak Prijavljenih Korisnika</h2>
+    <div class="table-responsive">
+        <table class="table table-bordered table-striped">
+            <thead class="thead-dark">
+            <tr>
+                <th>Ime</th>
+                <th>Prezime</th>
+                <th>Korisničko Ime</th>
+                <th>Status</th>
+                <th>Akcija</th>
+            </tr>
+            </thead>
+            <tbody>
+            <% spisak_prijavljenih.rows.forEach(function(user) { %>
+                <tr>
+                    <td><%= user.ime %></td>
+                    <td><%= user.prezime %></td>
+                    <td><%= user.korisnicko_ime %></td>
+                    <td><%= user.status %></td>
+                    <td>
+                        <% if (user.status === 'u obradi') { %>
+                            <form action="/organizator/event/<%= event.rows[0].id %>/accept-user/<%= user.korisnicko_ime %>" method="POST" style="display:inline;">
+                                <button type="submit" class="btn btn-success btn-sm">Prihvati</button>
+                            </form>
+                            <form action="/organizator/event/<%= event.rows[0].id %>/reject-user/<%= user.korisnicko_ime %>" method="POST" style="display:inline;">
+                                <button type="submit" class="btn btn-danger btn-sm">Odbij</button>
+                            </form>
+                        <% } else if (user.status === 'odbijen') { %>
+                            <form action="/organizator/event/<%= event.rows[0].id %>/accept-user/<%= user.korisnicko_ime %>" method="POST" style="display:inline;">
+                                <button type="submit" class="btn btn-success btn-sm">Prihvati</button>
+                            </form>
+                        <% } else if (user.status === 'odobren') { %>
+                            <form action="/organizator/event/<%= event.rows[0].id %>/reject-user/<%= user.korisnicko_ime %>" method="POST" style="display:inline;">
+                                <button type="submit" class="btn btn-danger btn-sm">Odbij</button>
+                            </form>
+                        <% } %>
+                    </td>
+                </tr>
+            <% }) %>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="text-center mt-4">
+        <a href="/organizator/eventi/1" class="btn btn-secondary">Nazad na Evente</a><!-- promijeniti ovo -->
+    </div>
+</div>
+
+<!-- Bootstrap JS and dependencies -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

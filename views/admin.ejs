@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Korisnici</title>
+    <!-- Bootstrap CDN -->
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            padding: 20px;
+            /*background: url("https://t3.ftcdn.net/jpg/07/33/50/26/360_F_733502690_GYuQrHyM4W7xxhRW0UPGrySJxJoRnNz4.jpg");*/
+        }
+        .table-responsive {
+            margin-top: 20px;
+        }
+        .btn-delete {
+            color: #fff;
+            background-color: #dc3545;
+            border-color: #dc3545;
+        }
+        .btn-unblock {
+            color: #fff;
+            background-color: #28a745;
+            border-color: #28a745;
+        }
+        .navbar {
+            margin: 20px;
+            display:flex;
+            justify-content: space-between;
+        }
+        .navbar-collapse{
+            justify-content: end;
+        }
+    </style>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <a class="navbar-brand" href="/admin">Event Management</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav">
+            <li class="nav-item">
+                <a class="nav-link" href="/admin/statistika">Statistika</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/admin/dodaj-tip-eventa">Dodaj tip eventa</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/admin/dodaj-novu-lokaciju">Dodaj novu lokaciju</a>
+            </li>
+        </ul>
+    </div>
+</nav>
+<div class="container">
+    <h1 class="text-center">Lista korisnika</h1>
+    <div class="table-responsive">
+        <table class="table table-bordered table-striped">
+            <thead class="thead-dark">
+            <tr>
+                <th>Korisničko ime</th>
+                <th>Email</th>
+                <th>Ime</th>
+                <th>Prezime</th>
+                <th>Uloga</th>
+                <th>Akcija</th>
+            </tr>
+            </thead>
+            <tbody>
+            <% users.forEach(function(user) { %>
+                <tr>
+                    <td><%= user.korisnicko_ime %></td>
+                    <td><%= user.email %></td>
+                    <td><%= user.ime %></td>
+                    <td><%= user.prezime %></td>
+                    <td><%= user.uloga %></td>
+                    <td>
+                        <% if (user.status === 'aktivan') { %>
+                            <form action="/admin/delete-user/<%= user.id %>" method="POST" style="display:inline;">
+                                <button type="submit" class="btn btn-delete btn-sm">Arhiviraj</button>
+                            </form>
+                            <form action="/admin/block-user/<%= user.id %>" method="POST" style="display:inline;">
+                                <button type="submit" class="btn btn-delete btn-sm">Blokiraj</button>
+                            </form>
+                            <form action="/admin/block-user-on-15-days/<%= user.id %>" method="POST" style="display:inline;">
+                                <button type="submit" class="btn btn-delete btn-sm">Blokiraj na 15 dana</button>
+                            </form>
+                        <% } else if (user.status === 'privremeno blokiran' || user.status === 'blokiran') { %>
+                            <form action="/admin/unblock-user/<%= user.id %>" method="POST" style="display:inline;">
+                                <button type="submit" class="btn btn-unblock btn-sm">Odblokiraj</button>
+                            </form>
+                            <form action="/admin/delete-user/<%= user.id %>" method="POST" style="display:inline;">
+                                <button type="submit" class="btn btn-delete btn-sm">Arhiviraj</button>
+                            </form>
+                        <% } %>
+                    </td>
+                </tr>
+            <% }) %>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Bootstrap JS and dependencies -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

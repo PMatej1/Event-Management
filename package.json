@@ -1,0 +1,21 @@
+{
+  "name": "upravljanje-doga-ajima",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "start": "node ./bin/www"
+  },
+  "dependencies": {
+    "axios": "^1.7.2",
+    "connect-flash": "^0.1.1",
+    "cookie-parser": "~1.4.4",
+    "debug": "~2.6.9",
+    "ejs": "~2.6.1",
+    "express": "~4.16.1",
+    "express-session": "^1.18.0",
+    "http-errors": "~1.6.3",
+    "morgan": "~1.9.1",
+    "nodemon": "^3.1.4",
+    "pg": "^8.12.0"
+  }
+}
