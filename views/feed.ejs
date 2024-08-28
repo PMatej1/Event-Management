@@ -6,6 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Eventi</title>
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
     <style>
         body {
             font-family: 'Arial', sans-serif;
@@ -28,7 +30,7 @@
 
         nav {
             display: flex;
-            justify-content: end;
+            justify-content: start;
             text-align: center;
             margin: 20px 0;
         }
@@ -114,37 +116,12 @@
 
 <body>
 <header>
-    <h1>Event Management</h1>
+    <h1>Feed</h1>
 </header>
-<nav class="navbar navbar-expand-lg">
-    <a class="navbar-brand" href="/">Event Management</a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav mr-auto">
-            <li class="nav-item">
-                <a class="nav-link" href="/profil">Profil</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="/events">Eventi</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="/korisnici">Korisnici</a>
-            </li>
-            <li>
-                <form class="form-inline my-2 my-lg-0" action="/korisnik/rezultati-searcha" method="post">
-                    <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" name="kljucnaRijec">
-                    <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-                </form>
-            </li>
-        </ul>
-        <ul class="navbar-nav">
-            <li class="nav-item">
-                <a class="nav-link" href="/logout">Logout</a>
-            </li>
-        </ul>
-    </div>
+<nav>
+    <a href="/korisnik">
+        <i class="fas fa-arrow-left"></i> Povratak
+    </a>
 </nav>
 
 <main>
@@ -158,7 +135,9 @@
                     <p class="card-text"><small class="text-muted">Datum: <%= event.datum %></small></p>
                     <p class="card-text"><small class="text-muted">Lokacija: <%= event.mjesto %></small></p>
                     <p class="card-text"><small class="text-muted">Cijena: <%= event.cijena %> KM</small></p>
-                    <a href="/prijavi/<%= event.id %>" class="btn btn-register">Prijavi se</a>
+                    <form action="prijava-na-event/<%= event.id %>" method="post">
+                        <button class="btn btn-register" type="submit"> Prijavi se</button>
+                    </form>
                 </div>
             </div>
         <% }) %>
@@ -191,6 +170,9 @@
                     <p class="card-text"><small class="text-muted">Lokacija: <%= event.mjesto %></small></p>
                     <p class="card-text"><small class="text-muted">Cijena: <%= event.cijena %> KM</small></p>
                     <p class="card-text"><small class="text-muted">Broj prijava: <%= event.broj_prijava %></small></p>
+                    <form action="prijava-na-event/<%= event.id %>" method="post">
+                    <button class="btn btn-register" type="submit"> Prijavi se</button>
+                    </form>
                 </div>
             </div>
         <% }) %>
@@ -198,13 +180,13 @@
 </main>
 
 <footer>
-    <h3>Kontakt</h3>
-    <p>Adresa: XYZ ulica, Grad</p>
-    <p>Email: kontakt@eventmanagement.com</p>
+    <h3>EventHub</h3>
+    <p>Pridružite se našoj zajednici na društvenim mrežama ili nas kontaktirajte na info@eventhub.com.</p>
+    <p>© 2024 EventHub. Sva prava zadržana.</p>
     <div class="icon">
-        <span>FB</span>
-        <span>TW</span>
-        <span>IG</span>
+        <span><i class="fab fa-facebook"></i></span>
+        <span><i class="fab fa-twitter"></i></span>
+        <span><i class="fab fa-instagram"></i></span>
     </div>
 </footer>
 

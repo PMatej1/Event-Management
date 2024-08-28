@@ -32,7 +32,7 @@
 
         nav {
             display: flex;
-            justify-content: end;
+            justify-content: start;
             text-align: center;
             margin: 20px 0;
         }
@@ -60,6 +60,11 @@
 
         .form-group label {
             font-weight: bold;
+        }
+
+        .table td{
+            color: white;
+            vertical-align: middle;
         }
 
         #map {
@@ -128,6 +133,37 @@
             background-color: #555;
         }
 
+        footer {
+            background-color: #333;
+            padding: 50px 0;
+            color: #ffffff;
+            text-align: center;
+            margin-top: 50px;
+        }
+
+        footer h3 {
+            font-size: 32px;
+            color: #f15a24;
+            margin-bottom: 20px;
+        }
+
+        footer p {
+            font-size: 16px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        footer .icon {
+            margin-top: 20px;
+            color: #f15a24;
+            font-size: 24px;
+        }
+
+        footer .icon span {
+            margin: 0 15px;
+        }
+
     </style>
 </head>
 <body>
@@ -135,10 +171,9 @@
     <h1>Dodaj Novu Lokaciju</h1>
 </header>
 <nav>
-    <a href="/admin">Početna</a>
-    <a href="/admin/statistika">Statistika</a>
-    <a href="/admin/dodaj-tip-eventa">Dodaj Tip Eventa</a>
-    <a href="/admin/dodaj-novu-lokaciju">Dodaj Novu Lokaciju</a>
+    <a href="/admin">
+        <i class="fas fa-arrow-left"></i> Povratak
+    </a>
 </nav>
 
 <div class="container">
@@ -233,12 +268,20 @@
         </div>
     </div>
 </div>
+<footer>
+    <h3>EventHub</h3>
+    <p>Pridružite se našoj zajednici na društvenim mrežama ili nas kontaktirajte na info@eventhub.com.</p>
+    <p>© 2024 EventHub. Sva prava zadržana.</p>
+    <div class="icon">
+        <span><i class="fab fa-facebook"></i></span>
+        <span><i class="fab fa-twitter"></i></span>
+        <span><i class="fab fa-instagram"></i></span>
+    </div>
+</footer>
 
-<!-- Bootstrap JS and dependencies -->
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-<!-- Leaflet JS -->
 <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 <script>
     // Initialize the map

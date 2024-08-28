@@ -78,9 +78,10 @@
                 <h2>Odaberite Vaše Interese</h2>
                 <div id="interesi">
                     <% ponudjeni_tipovi.forEach(function(tip) { %>
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" id="interes<%= tip.id %>" name="interesi" value="<%= tip.id %>">
+                        <div class="form-check" style="display: flex; justify-content: space-between">
                             <label class="form-check-label" for="interes<%= tip.id %>"><%= tip.naziv_tipa %></label>
+                            <input class="form-check-input" type="checkbox" id="interes<%= tip.id %>" name="interesi" value="<%= tip.id %>">
+
                         </div>
                     <% }) %>
                 </div>

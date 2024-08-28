@@ -26,8 +26,9 @@
             color: #f15a24;
         }
         nav {
+            width: 100%;
             display: flex;
-            justify-content: end;
+            justify-content: space-between;
             text-align: center;
             margin: 20px 0;
         }
@@ -56,6 +57,7 @@
             background-color: darkorange;
         }
         footer {
+            margin-top: 50px;
             background-color: #333;
             padding: 50px 0;
             color: #ffffff;
@@ -80,6 +82,20 @@
         footer .icon span {
             margin: 0 15px;
         }
+        #notification-popup ul li a:hover {
+            text-decoration: underline;
+            color: #f5a623; /* Svjetlija nijansa narandžaste za hover */
+        }
+
+        #notification-popup ul li {
+            border-bottom: 1px solid #555;
+            padding-bottom: 5px;
+        }
+
+        #notification-popup ul li:last-child {
+            border-bottom: none;
+        }
+
     </style>
 </head>
 <body>
@@ -87,8 +103,34 @@
     <h1>Event Management</h1>
 </header>
 <nav>
-    <a class="nav-link" href="#">Event Management</a>
-    <a class="nav-link" href="/organizator/eventi">Eventi</a>
+
+    <a class="nav-link" href="/organizator/eventi">Moji eventi</a>
+    <div style="display: flex; justify-content: space-between; align-items: center; width: 10%;">
+        <div id="notification-bell" style="cursor: pointer; position: relative;">
+            <i class="fas fa-bell" style="font-size: 24px; color: orange;"></i>
+            <div id="notification-popup" style="display: none; position: absolute; top: 30px; right: 0; background-color: #333; color: white; padding: 10px; border-radius: 5px; box-shadow: 0px 0px 10px rgba(0,0,0,0.5); width: 300px;">
+                <% if (obavijesti.length === 0) { %>
+                    <p style="margin: 0;">No new notifications</p>
+                <% } else { %>
+                    <ul style="list-style-type: none; padding: 0; margin: 0;">
+                        <% obavijesti.forEach(function(obavijest) { %>
+                            <li style="margin-bottom: 10px; word-wrap: break-word;">
+                                <a href="/organizator/event/<%= obavijest.id_eventa %>" style="color: orange; text-decoration: none;">
+                                    Korisnik <%= obavijest.ime + " " + obavijest.prezime %> se prijavio na event <%= obavijest.naziv %>
+                                </a>
+                            </li>
+                        <% }); %>
+                    </ul>
+                <% } %>
+            </div>
+        </div>
+    </div>
+
+    <form method="post" action="/logout">
+            <button type="submit" class="btn btn-primary">Logout</button>
+        </form>
+    </div>
+    </div>
 </nav>
 
 <div class="container">
@@ -110,21 +152,19 @@
             <label for="korisnicko_ime">Korisničko ime</label>
             <input type="text" class="form-control" id="korisnicko_ime" name="korisnicko_ime" value="<%= organizator.korisnicko_ime %>" required>
         </div>
-        <div class="form-group">
-            <label for="sifra">Šifra</label>
-            <input type="password" class="form-control" id="sifra" name="sifra" required>
-        </div>
+
         <button type="submit" class="btn btn-primary">Spremi</button>
     </form>
 </div>
 
 <footer>
-    <h3>Event Management</h3>
-    <p>Pratite nas na društvenim mrežama za najnovije informacije o događajima.</p>
+    <h3>EventHub</h3>
+    <p>Pridružite se našoj zajednici na društvenim mrežama ili nas kontaktirajte na info@eventhub.com.</p>
+    <p>© 2024 EventHub. Sva prava zadržana.</p>
     <div class="icon">
-        <span class="icon-facebook"></span>
-        <span class="icon-twitter"></span>
-        <span class="icon-instagram"></span>
+        <span><i class="fab fa-facebook"></i></span>
+        <span><i class="fab fa-twitter"></i></span>
+        <span><i class="fab fa-instagram"></i></span>
     </div>
 </footer>
 
@@ -132,5 +172,16 @@
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script>
+    document.getElementById('notification-bell').addEventListener('click', function() {
+        var popup = document.getElementById('notification-popup');
+        if (popup.style.display === 'none' || popup.style.display === '') {
+            popup.style.display = 'block';
+        } else {
+            popup.style.display = 'none';
+        }
+    });
+</script>
+
 </body>
 </html>

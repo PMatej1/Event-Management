@@ -16,6 +16,34 @@
             background-color: #1c1c1c;
             color: #ffffff;
         }
+        header {
+            background-color: #000;
+            padding: 20px 0;
+            text-align: center;
+        }
+
+        header h1 {
+            font-size: 36px;
+            color: #f15a24;
+        }
+
+        nav {
+            display: flex;
+            justify-content: start;
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        nav a {
+            color: #ffffff;
+            margin: 0 15px;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        nav a:hover {
+            color: #f15a24;
+        }
 
         .container {
             margin-top: 50px;
@@ -84,11 +112,49 @@
             background-color: #f15a24;
             color: #ffffff;
         }
+
+        footer {
+            background-color: #333;
+            padding: 50px 0;
+            color: #ffffff;
+            text-align: center;
+            margin-top: 50px;
+        }
+
+        footer h3 {
+            font-size: 32px;
+            color: #f15a24;
+            margin-bottom: 20px;
+        }
+
+        footer p {
+            font-size: 16px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        footer .icon {
+            margin-top: 20px;
+            color: #f15a24;
+            font-size: 24px;
+        }
+
+        footer .icon span {
+            margin: 0 15px;
+        }
     </style>
 </head>
 <body>
 <div class="container">
-    <h1 class="text-center">Detalji Eventa</h1>
+    <header>
+        <h1>Detalji o eventu: <%=event.rows[0].naziv%></h1>
+    </header>
+    <nav>
+        <a href="/organizator/eventi">
+            <i class="fas fa-arrow-left"></i> Povratak
+        </a>
+    </nav>
     <div class="card">
         <div class="card-header">
             <h2><%= event.rows[0].naziv %></h2>
@@ -102,54 +168,79 @@
             <p><strong>Tip:</strong> <%= event.rows[0].tip %></p>
         </div>
     </div>
-
+    <% if (!zavrsen) { %>
     <h2 class="text-center mt-5">Spisak Prijavljenih Korisnika</h2>
-    <div class="table-responsive">
-        <table class="table table-bordered table-striped">
-            <thead class="thead-dark">
-            <tr>
-                <th>Ime</th>
-                <th>Prezime</th>
-                <th>Korisničko Ime</th>
-                <th>Status</th>
-                <th>Akcija</th>
-            </tr>
-            </thead>
-            <tbody>
-            <% spisak_prijavljenih.rows.forEach(function(user) { %>
-                <tr>
-                    <td><%= user.ime %></td>
-                    <td><%= user.prezime %></td>
-                    <td><%= user.korisnicko_ime %></td>
-                    <td><%= user.status %></td>
-                    <td>
-                        <% if (user.status === 'u obradi') { %>
-                            <form action="/organizator/event/<%= event.rows[0].id %>/accept-user/<%= user.korisnicko_ime %>" method="POST" style="display:inline;">
-                                <button type="submit">Prihvati</button>
-                            </form>
-                            <form action="/organizator/event/<%= event.rows[0].id %>/reject-user/<%= user.korisnicko_ime %>" method="POST" style="display:inline;">
-                                <button type="submit">Odbij</button>
-                            </form>
-                        <% } else if (user.status === 'odbijen') { %>
-                            <form action="/organizator/event/<%= event.rows[0].id %>/accept-user/<%= user.korisnicko_ime %>" method="POST" style="display:inline;">
-                                <button type="submit">Prihvati</button>
-                            </form>
-                        <% } else if (user.status === 'odobren') { %>
-                            <form action="/organizator/event/<%= event.rows[0].id %>/reject-user/<%= user.korisnicko_ime %>" method="POST" style="display:inline;">
-                                <button type="submit">Odbij</button>
-                            </form>
-                        <% } %>
-                    </td>
-                </tr>
-            <% }) %>
-            </tbody>
-        </table>
-    </div>
 
-    <div class="text-center mt-4">
-        <a href="/organizator/eventi/1">Nazad na Evente</a><!-- promijeniti ovo -->
-    </div>
+        <div class="table-responsive">
+            <table class="table table-bordered table-striped">
+                <thead class="thead-dark">
+                <tr>
+                    <th>Ime</th>
+                    <th>Prezime</th>
+                    <th>Korisničko Ime</th>
+                    <th>Status</th>
+                    <th>Akcija</th>
+                </tr>
+                </thead>
+                <tbody>
+                <% spisak_prijavljenih.rows.forEach(function(user) { %>
+                    <tr>
+                        <td><%= user.ime %></td>
+                        <td><%= user.prezime %></td>
+                        <td><%= user.korisnicko_ime %></td>
+                        <td><%= user.status %></td>
+                        <td>
+                            <% if (user.status === 'u obradi') { %>
+                                <form action="/organizator/event/<%= event.rows[0].id %>/accept-user/<%= user.korisnicko_ime %>" method="POST" style="display:inline;">
+                                    <button type="submit">Prihvati</button>
+                                </form>
+                                <form action="/organizator/event/<%= event.rows[0].id %>/reject-user/<%= user.korisnicko_ime %>" method="POST" style="display:inline;">
+                                    <button type="submit">Odbij</button>
+                                </form>
+                            <% } else if (user.status === 'odbijen') { %>
+                                <form action="/organizator/event/<%= event.rows[0].id %>/accept-user/<%= user.korisnicko_ime %>" method="POST" style="display:inline;">
+                                    <button type="submit">Prihvati</button>
+                                </form>
+                            <% } else if (user.status === 'odobren') { %>
+                                <form action="/organizator/event/<%= event.rows[0].id %>/reject-user/<%= user.korisnicko_ime %>" method="POST" style="display:inline;">
+                                    <button type="submit">Odbij</button>
+                                </form>
+                            <% } %>
+                        </td>
+                    </tr>
+                <% }) %>
+                </tbody>
+            </table>
+        </div>
+    <% } else { %>
+        <h2 class="text-center mt-5">Recenzije</h2>
+        <div class="row">
+            <% recenzije.forEach(function(recenzija) { %>
+                <div class="col-md-4 mb-4">
+                    <div class="card">
+
+                        <div class="card-body">
+                            <p><strong>Recenzija:</strong> <%= recenzija.recenzija %></p>
+                            <p><strong>Komentar:</strong> <%= recenzija.komentar %></p>
+                        </div>
+                    </div>
+                </div>
+            <% }) %>
+        </div>
+    <% } %>
+
+
 </div>
+<footer>
+    <h3>EventHub</h3>
+    <p>Pridružite se našoj zajednici na društvenim mrežama ili nas kontaktirajte na info@eventhub.com.</p>
+    <p>© 2024 EventHub. Sva prava zadržana.</p>
+    <div class="icon">
+        <span><i class="fab fa-facebook"></i></span>
+        <span><i class="fab fa-twitter"></i></span>
+        <span><i class="fab fa-instagram"></i></span>
+    </div>
+</footer>
 
 <!-- Bootstrap JS and dependencies -->
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>

@@ -7,6 +7,8 @@
     <title>Moji Eventi</title>
     <!-- Bootstrap CSS -->
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
     <style>
         body {
             font-family: 'Arial', sans-serif;
@@ -20,21 +22,32 @@
             margin-top: 50px;
         }
 
-        .navbar {
+        header {
             background-color: #000;
             padding: 20px 0;
-            margin-bottom: 20px;
+            text-align: center;
+        }
+        header h1 {
+            font-size: 36px;
+            color: #f15a24;
         }
 
-        .navbar-brand,
-        .nav-link {
-            color: #ffffff !important;
+        nav {
+            display: flex;
+            justify-content: start;
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        nav a {
+            color: #ffffff;
+            margin: 0 15px;
+            text-decoration: none;
             font-weight: bold;
         }
 
-        .navbar-brand:hover,
-        .nav-link:hover {
-            color: #f15a24 !important;
+        nav a:hover {
+            color: #f15a24;
         }
 
         h1 {
@@ -93,21 +106,6 @@
             background-color: darkorange;
         }
 
-        .star-rating {
-            display: flex;
-            justify-content: center;
-        }
-
-        .star {
-            font-size: 2em;
-            color: grey;
-            cursor: pointer;
-        }
-
-        .star.checked {
-            color: gold;
-        }
-
         footer {
             background-color: #333;
             padding: 50px 0;
@@ -141,28 +139,13 @@
 </head>
 
 <body>
-<nav class="navbar navbar-expand-lg navbar-dark">
-    <a class="navbar-brand" href="/">Event Management</a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav mr-auto">
-            <li class="nav-item">
-                <a class="nav-link" href="/profil">Profil</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="/events">Eventi</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="/korisnik/moji-eventi">Moji Eventi</a>
-            </li>
-        </ul>
-        <form class="form-inline my-2 my-lg-0" action="/korisnik/rezultati-searcha" method="post">
-            <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" name="kljucnaRijec">
-            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-        </form>
-    </div>
+<header>
+    <h1>Moji Eventi</h1>
+</header>
+<nav>
+    <a href="/korisnik">
+        <i class="fas fa-arrow-left"></i> Povratak
+    </a>
 </nav>
 
 <div class="container">
@@ -178,9 +161,9 @@
                     <p class="card-text"><small class="text-muted">Cijena: <%= event.cijena %> KM</small></p>
                     <p class="card-text">
                         <span class="status <%= event.status === 'odobren' ? 'confirmed' : event.status === 'odbijen' ? 'rejected' : 'pending' %>"></span>
-                        <%= event.status.charAt(0).toUpperCase() + event.status.slice(1) %>
+                        <%= event.status %>
                     </p>
-                    <% if (event.status === 'odobren') { %>
+                    <% if (event.status === 'odobren' || event.status==="u obradi") { %>
                         <form action="/korisnik/otkazi-prijavu/<%= event.id %>" method="POST" style="display:inline;">
                             <button type="submit" class="btn btn-cancel btn-sm cancel-btn">Otkaži prijavu</button>
                         </form>
@@ -195,10 +178,10 @@
 <!-- Rate Modal -->
 <div class="modal fade" id="rateModal" tabindex="-1" role="dialog" aria-labelledby="rateModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="rateModalLabel">Ocijeni Event</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <div class="modal-content" style="background-color: #333; color: #ffffff;">
+            <div class="modal-header" style="border-bottom: 1px solid #f15a24;">
+                <h5 class="modal-title" id="rateModalLabel" style="color: #f15a24;">Ocijeni Event</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color: #ffffff;">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
@@ -207,23 +190,25 @@
                     <input type="hidden" name="eventId" id="rateEventId">
                     <div class="form-group">
                         <label for="rating">Ocjena:</label>
-                        <div id="starRating" class="star-rating">
-                            <% for (let i = 1; i <= 5; i++) { %>
-                                <span class="star" data-value="<%= i %>">&bigstar;</span>
-                            <% } %>
-                        </div>
-                        <input type="hidden" name="rating" id="ratingValue">
+                        <select class="form-control" id="rating" name="rating">
+                            <option value="1">1 - Loše</option>
+                            <option value="2">2 - Nije dobro</option>
+                            <option value="3">3 - Prosječno</option>
+                            <option value="4">4 - Dobro</option>
+                            <option value="5">5 - Odlično</option>
+                        </select>
                     </div>
                     <div class="form-group">
                         <label for="comment">Komentar:</label>
-                        <textarea class="form-control" id="comment" name="comment" rows="3"></textarea>
+                        <textarea class="form-control" id="comment" name="comment" rows="3" style="background-color: #444; color: #ffffff;"></textarea>
                     </div>
-                    <button type="submit" class="btn btn-primary">Pošalji</button>
+                    <button type="submit" class="btn btn-primary" style="background-color: orange; border: none;">Pošalji</button>
                 </form>
             </div>
         </div>
     </div>
 </div>
+
 
 <!-- Bootstrap JS and dependencies -->
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
@@ -251,28 +236,21 @@
             const modal = $(this);
             modal.find('#rateEventId').val(eventId);
 
-            // Resetovanje zvezdica
-            const stars = modal.find('.star');
-            stars.removeClass('checked');
-            modal.find('#ratingValue').val('');
 
-            // Klik na zvezdicu
-            stars.on('click', function() {
-                const value = $(this).data('value');
-                stars.removeClass('checked');
-                $(this).prevAll().addBack().addClass('checked');
-                modal.find('#ratingValue').val(value);
-            });
+
+
         });
     });
 </script>
 
 <footer>
-    <h3>Kontaktirajte nas</h3>
-    <p>Ako imate bilo kakva pitanja ili trebate pomoć, slobodno nas kontaktirajte putem emaila ili telefona. Tu smo da vam pomognemo!</p>
+    <h3>EventHub</h3>
+    <p>Pridružite se našoj zajednici na društvenim mrežama ili nas kontaktirajte na info@eventhub.com.</p>
+    <p>© 2024 EventHub. Sva prava zadržana.</p>
     <div class="icon">
-        <span>&#9742; Telefon: +387 33 123 456</span>
-        <span>&#9993; Email: support@eventmanagement.com</span>
+        <span><i class="fab fa-facebook"></i></span>
+        <span><i class="fab fa-twitter"></i></span>
+        <span><i class="fab fa-instagram"></i></span>
     </div>
 </footer>
 </body>

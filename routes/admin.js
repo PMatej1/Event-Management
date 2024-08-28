@@ -181,7 +181,7 @@ router.post('/delete-lokacija/:id', async (req, res) => {
 
 router.post('/update-lokacija', async (req, res) => {
 
-    const { id, naziv, grad, ulica, postanski_broj, latitude, longitude } = req.body;
+    const { id, naziv, grad, ulica, postanski_broj } = req.body;
 
     try {
         const updateQuery = `
@@ -288,7 +288,7 @@ router.get('/statistika', async (req, res) => {
             ORDER BY broj DESC
         `);
 
-
+    console.log(nadolazeciEventiSaNajvisePrijava.rows, "nadolazeci eventi")
         res.render('statistika', {
             brojKorisnika: brojKorisnika.rows[0].count,
             brojOrganizatora: brojOrganizatora.rows[0].count,
@@ -317,7 +317,7 @@ router.post('/edit-tip-eventa/:id', async (req, res) => {
     const { naziv } = req.body;
     try {
         await pool.query('UPDATE tip_eventa SET naziv_tipa = $1 WHERE id = $2', [naziv, id]);
-        res.redirect('/admin/dodaj-tip-eventa'); // Redirektujte nazad na stranicu sa tipovima eventa
+        res.redirect('/admin/dodaj-tip-eventa');
     } catch (err) {
         console.error(err);
         res.send("Error " + err);

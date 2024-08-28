@@ -6,6 +6,8 @@
     <title>Eventi po Organizatoru</title>
     <!-- Bootstrap CSS -->
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+
     <style>
         body {
             font-family: 'Arial', sans-serif;
@@ -25,7 +27,7 @@
         }
         nav {
             display: flex;
-            justify-content: end;
+            justify-content: start;
             text-align: center;
             margin: 20px 0;
         }
@@ -68,14 +70,46 @@
             background-color: #f15a24;
             color: #ffffff;
         }
+        footer {
+            background-color: #333;
+            padding: 50px 0;
+            color: #ffffff;
+            text-align: center;
+            margin-top: 50px;
+        }
+
+        footer h3 {
+            font-size: 32px;
+            color: #f15a24;
+            margin-bottom: 20px;
+        }
+
+        footer p {
+            font-size: 16px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        footer .icon {
+            margin-top: 20px;
+            color: #f15a24;
+            font-size: 24px;
+        }
+
+        footer .icon span {
+            margin: 0 15px;
+        }
     </style>
 </head>
 <body>
 <header>
-    <h1>Event Management</h1>
+    <h1>Eventi po odabranom organizatoru</h1>
 </header>
 <nav>
-    <a class="navbar-brand" href="/">Event Management</a>
+    <a href="/korisnik">
+        <i class="fas fa-arrow-left"></i> Povratak
+    </a>
 </nav>
 
 <div class="container">
@@ -96,6 +130,16 @@
         <% }) } %>
     </div>
 </div>
+<footer>
+    <h3>EventHub</h3>
+    <p>Pridružite se našoj zajednici na društvenim mrežama ili nas kontaktirajte na info@eventhub.com.</p>
+    <p>© 2024 EventHub. Sva prava zadržana.</p>
+    <div class="icon">
+        <span><i class="fab fa-facebook"></i></span>
+        <span><i class="fab fa-twitter"></i></span>
+        <span><i class="fab fa-instagram"></i></span>
+    </div>
+</footer>
 
 <!-- Bootstrap JS and dependencies -->
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>

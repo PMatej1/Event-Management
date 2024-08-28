@@ -30,7 +30,7 @@
 
         nav {
             display: flex;
-            justify-content: end;
+            justify-content: start;
             text-align: center;
             margin: 20px 0;
         }
@@ -61,7 +61,12 @@
         }
 
         .table-responsive {
+
             margin-top: 20px;
+        }
+        .table td{
+            color: white;
+            vertical-align: middle;
         }
 
         .thead-dark {
@@ -124,6 +129,37 @@
         a:hover i {
             color: #ffffff;
         }
+
+        footer {
+            background-color: #333;
+            padding: 50px 0;
+            color: #ffffff;
+            text-align: center;
+            margin-top: 50px;
+        }
+
+        footer h3 {
+            font-size: 32px;
+            color: #f15a24;
+            margin-bottom: 20px;
+        }
+
+        footer p {
+            font-size: 16px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        footer .icon {
+            margin-top: 20px;
+            color: #f15a24;
+            font-size: 24px;
+        }
+
+        footer .icon span {
+            margin: 0 15px;
+        }
     </style>
 </head>
 <body>
@@ -132,14 +168,14 @@
 </header>
 <nav>
     <a href="/admin">
-        <i class="fas fa-arrow-left"></i> Nazad
+        <i class="fas fa-arrow-left"></i> Povratak
     </a>
 </nav>
 
 <div class="container">
     <form action="/admin/dodaj-tip-eventa" method="POST">
         <div class="form-group">
-            <label for="naziv">Naziv Tip Eventa</label>
+            <label for="naziv">Naziv Tipa Eventa</label>
             <input type="text" class="form-control" id="naziv" name="naziv" placeholder="Unesite naziv tipa eventa" required>
         </div>
         <button type="submit" class="btn">Dodaj</button>
@@ -176,7 +212,7 @@
                                     <div class="modal-body">
                                         <form action="/admin/edit-tip-eventa/<%= tip.id %>" method="POST">
                                             <div class="form-group">
-                                                <label for="naziv<%= tip.id %>">Naziv Tip Eventa</label>
+                                                <label for="naziv<%= tip.id %>">Naziv Tipa Eventa</label>
                                                 <input type="text" class="form-control" id="naziv<%= tip.id %>" name="naziv" value="<%= tip.naziv_tipa %>" required>
                                             </div>
                                             <button type="submit" class="btn">Spremi</button>
@@ -192,8 +228,17 @@
         </table>
     </div>
 </div>
+<footer>
+    <h3>EventHub</h3>
+    <p>Pridružite se našoj zajednici na društvenim mrežama ili nas kontaktirajte na info@eventhub.com.</p>
+    <p>© 2024 EventHub. Sva prava zadržana.</p>
+    <div class="icon">
+        <span><i class="fab fa-facebook"></i></span>
+        <span><i class="fab fa-twitter"></i></span>
+        <span><i class="fab fa-instagram"></i></span>
+    </div>
+</footer>
 
-<!-- Bootstrap JS and dependencies -->
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>

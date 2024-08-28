@@ -6,6 +6,7 @@
     <title>Rezultati pretrage</title>
     <!-- Bootstrap CSS -->
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
     <style>
         body {
             font-family: 'Arial', sans-serif;
@@ -28,7 +29,7 @@
 
         nav {
             display: flex;
-            justify-content: end;
+            justify-content: start;
             text-align: center;
             margin: 20px 0;
         }
@@ -68,14 +69,23 @@
             display: flex;
             flex-direction: column;
             align-items: center;
+            width: 80%; /* Increase width to take up more space */
+            margin: auto; /* Center the card wrapper */
+            margin-bottom: 30px;
         }
 
         .card {
-            width: 60%;
+            width: 100%; /* Cards take full width of the card wrapper */
             margin-bottom: 20px;
             background-color: #333;
             border: 2px solid #f15a24;
             color: #ffffff;
+            transition: transform 0.2s;
+
+        }
+
+        .card:hover {
+            transform: scale(1.02); /* Add slight scale on hover */
         }
 
         .btn-register {
@@ -123,69 +133,89 @@
         footer .icon span {
             margin: 0 15px;
         }
+
+        .no-results {
+            color: #f15a24;
+            font-size: 18px;
+            margin: 20px 0;
+        }
+        #lokacije , #eventi , #korisnici{
+            width: 80%;
+        }
     </style>
 </head>
 <body>
 <header>
     <h1>Rezultati pretrage</h1>
 </header>
-
 <nav>
-    <a href="/profil">Profil</a>
-    <a href="/events">Eventi</a>
+    <a href="/korisnik">
+        <i class="fas fa-arrow-left"></i> Povratak
+    </a>
 </nav>
 
 <main>
-    <div class="text-center">
-        <button class="btn-filter" onclick="showResults('korisnici')">Korisnici</button>
-        <button class="btn-filter" onclick="showResults('lokacije')">Lokacije</button>
-        <button class="btn-filter" onclick="showResults('eventi')">Eventi</button>
-    </div>
-    <div id="korisnici" class="card-wrapper" style="display: none;">
-        <% if (korisnici.length > 0) { korisnici.forEach(function(korisnik) { %>
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title"><%= korisnik.ime %> <%= korisnik.prezime %></h5>
-                    <p class="card-text"><small class="text-muted">@<%= korisnik.korisnicko_ime %></small></p>
-                    <a href="#" onclick="showOrganizerEvents('<%= korisnik.id %>')" class="stretched-link"></a>
+    <div class="card-wrapper">
+        <h3>Korisnici dobijeni pretragom</h3>
+        <div id="korisnici">
+            <% if (korisnici.length > 0) { korisnici.forEach(function(korisnik) { %>
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title"><%= korisnik.ime %> <%= korisnik.prezime %></h5>
+                        <p class="card-text"><small class="text-muted">@<%= korisnik.korisnicko_ime %></small></p>
+                        <a href="#" onclick="showOrganizerEvents('<%= korisnik.id %>')" class="stretched-link"></a>
+                    </div>
                 </div>
-            </div>
-        <% }) } %>
-    </div>
-    <div id="lokacije" class="card-wrapper" style="display: none;">
-        <% if (lokacije.length > 0) { lokacije.forEach(function(lokacija) { %>
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title"><%= lokacija.naziv %></h5>
-                    <p class="card-text"><%= lokacija.ulica %>, <%= lokacija.grad %></p>
-                    <a href="#" onclick="showLocationEvents('<%= lokacija.id %>')" class="stretched-link"></a>
+            <% }) } else { %>
+                <p class="no-results">Nema korisnika u rezultatima pretrage.</p>
+            <% } %>
+        </div>
+
+        <h3>Lokacije dobijene pretragom</h3>
+        <div id="lokacije">
+            <% if (lokacije.length > 0) { lokacije.forEach(function(lokacija) { %>
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title"><%= lokacija.naziv %></h5>
+                        <p class="card-text"><%= lokacija.ulica %>, <%= lokacija.grad %></p>
+                        <a href="#" onclick="showLocationEvents('<%= lokacija.id %>')" class="stretched-link"></a>
+                    </div>
                 </div>
-            </div>
-        <% }) } %>
-    </div>
-    <div id="eventi" class="card-wrapper" style="display: none;">
-        <% if (eventi.length > 0) { eventi.forEach(function(event) { %>
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title"><%= event.naziv %></h5>
-                    <p class="card-text"><%= event.opis %></p>
-                    <p class="card-text"><small class="text-muted">Datum: <%= event.datum %></small></p>
-                    <p class="card-text"><small class="text-muted">Lokacija: <%= event.mjesto %></small></p>
-                    <p class="card-text"><small class="text-muted">Cijena: <%= event.cijena %> KM</small></p>
-                    <form action="/korisnik/prijava-na-event/<%= event.id %>" method="POST" style="display:inline;">
-                        <button type="submit" class="btn-register">Prijavi se</button>
-                    </form>
+            <% }) } else { %>
+                <p class="no-results">Nema lokacija u rezultatima pretrage.</p>
+            <% } %>
+        </div>
+
+        <h3>Eventi dobijeni pretragom</h3>
+        <div id="eventi">
+            <% if (eventi.length > 0) { eventi.forEach(function(event) { %>
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title"><%= event.naziv %></h5>
+                        <p class="card-text"><%= event.opis %></p>
+                        <p class="card-text"><small class="text-muted">Datum: <%= event.datum %></small></p>
+                        <p class="card-text"><small class="text-muted">Lokacija: <%= event.mjesto %></small></p>
+                        <p class="card-text"><small class="text-muted">Cijena: <%= event.cijena %> KM</small></p>
+                        <form action="/korisnik/prijava-na-event/<%= event.id %>" method="POST" style="display:inline;">
+                            <button type="submit" class="btn-register">Prijavi se</button>
+                        </form>
+                    </div>
                 </div>
-            </div>
-        <% }) } %>
+            <% }) } else { %>
+                <p class="no-results">Nema evenata u rezultatima pretrage.</p>
+            <% } %>
+        </div>
     </div>
 </main>
 
 <footer>
-    <h3>Kontaktirajte nas</h3>
-    <p>Ako imate pitanja ili trebate podršku, slobodno nas kontaktirajte putem naše kontakt stranice.</p>
+    <h3>EventHub</h3>
+    <p>Pridružite se našoj zajednici na društvenim mrežama ili nas kontaktirajte na info@eventhub.com.</p>
+    <p>© 2024 EventHub. Sva prava zadržana.</p>
     <div class="icon">
-        <span>&#xf16d;</span> <!-- Social media icon example -->
+        <span><i class="fab fa-facebook"></i></span>
+        <span><i class="fab fa-twitter"></i></span>
+        <span><i class="fab fa-instagram"></i></span>
     </div>
 </footer>
 
@@ -194,11 +224,10 @@
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 <script>
-    function showResults(category) {
-        document.getElementById('korisnici').style.display = 'none';
-        document.getElementById('lokacije').style.display = 'none';
-        document.getElementById('eventi').style.display = 'none';
-        document.getElementById(category).style.display = 'block';
+    function showResults() {
+        document.getElementById('korisnici').style.display = 'block';
+        document.getElementById('lokacije').style.display = 'block';
+        document.getElementById('eventi').style.display = 'block';
     }
 
     function showLocationEvents(locationId) {

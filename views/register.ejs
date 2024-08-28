@@ -28,7 +28,7 @@
 
         nav {
             display: flex;
-            justify-content: end;
+            justify-content: start;
             text-align: center;
             margin: 20px 0;
         }
@@ -45,6 +45,10 @@
         }
 
         .register-container {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
             background: rgba(0, 0, 0, 0.8);
             padding: 20px;
             border-radius: 10px;
@@ -64,7 +68,7 @@
         .register-container input[type="password"],
         .register-container input[type="text"],
         .register-container select {
-            width: 100%;
+            width: 80%;
             padding: 10px;
             margin: 10px 0;
             border: 1px solid #ccc;
@@ -90,7 +94,16 @@
             background-color: darkorange;
         }
 
+        form{
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
         footer {
+            margin-top: 50px;
             background-color: #333;
             padding: 50px 0;
             color: #ffffff;
@@ -156,10 +169,8 @@
             <input type="text" name="lastName" placeholder="Last Name" required>
             <input type="text" name="username" placeholder="Username" required>
             <select name="role" required>
-                <option value="" disabled selected>Select Role</option>
                 <option value="user">User</option>
                 <option value="organizer">Organizer</option>
-                <option value="admin">Admin</option>
             </select>
             <button type="submit">Register</button>
         </form>
@@ -170,8 +181,9 @@
 </main>
 
 <footer>
-    <h3>Footer Title</h3>
-    <p>Your footer content goes here.</p>
+    <h3>EventHub</h3>
+    <p>Pridružite se našoj zajednici na društvenim mrežama ili nas kontaktirajte na info@eventhub.com.</p>
+    <p>© 2024 EventHub. Sva prava zadržana.</p>
     <div class="icon">
         <span><i class="fab fa-facebook"></i></span>
         <span><i class="fab fa-twitter"></i></span>

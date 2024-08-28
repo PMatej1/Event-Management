@@ -8,6 +8,8 @@
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <!-- Chart.js CDN -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
     <style>
         body {
             display: flex;
@@ -19,37 +21,36 @@
         .container {
             flex: 1;
         }
-        .navbar, .sidebar {
-            background-color: #1f1f1f; /* Slightly lighter dark background for navbar and sidebar */
+
+        header {
+            background-color: #000;
+            padding: 20px 0;
+            text-align: center;
         }
-        .navbar-brand, .nav-link, .sidebar a {
-            color: #f5f5f5; /* Light text color */
+
+        header h1 {
+            font-size: 36px;
+            color: #f15a24;
         }
-        .navbar-toggler-icon {
-            filter: invert(1); /* Make toggler icon light */
+
+        nav {
+            display: flex;
+            justify-content: start;
+            text-align: center;
+            margin: 20px 0;
         }
-        .navbar-nav .nav-link:hover {
-            background-color: #ff6600; /* Orange accent on hover */
+
+        nav a {
             color: #ffffff;
-            border-radius: 5px;
-        }
-        .sidebar {
-            height: 100%;
-            padding: 20px;
-            border-right: 1px solid #333333; /* Darker border for separation */
-        }
-        .sidebar a {
-            display: block;
-            padding: 10px 15px;
-            margin-bottom: 10px;
+            margin: 0 15px;
             text-decoration: none;
-            border-radius: 5px; /* Rounded corners */
-            transition: background-color 0.3s ease;
+            font-weight: bold;
         }
-        .sidebar a:hover {
-            background-color: #ff6600; /* Orange accent on hover */
-            color: #ffffff;
+
+        nav a:hover {
+            color: #f15a24;
         }
+
         .main-content {
             padding: 20px;
             flex: 1;
@@ -63,43 +64,49 @@
         h1, h3 {
             color: #ff6600; /* Orange accent for headings */
         }
+
+        footer {
+            background-color: #333;
+            padding: 50px 0;
+            color: #ffffff;
+            text-align: center;
+        }
+
+        footer h3 {
+            font-size: 32px;
+            color: #f15a24;
+            margin-bottom: 20px;
+        }
+
+        footer p {
+            font-size: 16px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        footer .icon {
+            margin-top: 20px;
+            color: #f15a24;
+            font-size: 24px;
+        }
+
+        footer .icon span {
+            margin: 0 15px;
+        }
     </style>
 </head>
 <body>
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <a class="navbar-brand" href="#">Event Management</a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav ml-auto">
-            <li class="nav-item">
-                <a class="nav-link" href="/admin">Početna</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="/admin/statistika">Statistika</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="/admin/dodaj-tip-eventa">Dodaj tip eventa</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="/admin/dodaj-novu-lokaciju">Dodaj novu lokaciju</a>
-            </li>
-        </ul>
-    </div>
+<header>
+    <h1>Detaljan pregled</h1>
+</header>
+<nav>
+    <a href="/admin">
+        <i class="fas fa-arrow-left"></i> Povratak
+    </a>
 </nav>
 
 <div class="d-flex">
-    <div class="sidebar">
-        <h4>Statistika</h4>
-        <a href="#ukupniPodaci">Ukupni podaci</a>
-        <a href="#nadolazeciEventi">Nadolazeći eventi</a>
-        <a href="#zavrseniEventi">Završeni eventi</a>
-        <a href="#organizatori">Organizatori</a>
-        <a href="#korisnici">Korisnici</a>
-        <a href="#gradovi">Gradovi</a>
-        <a href="#tipoviEvenata">Tipovi evenata</a>
-    </div>
     <div class="main-content">
         <div class="container">
             <h1 class="text-center">Statistika</h1>
@@ -160,6 +167,17 @@
         </div>
     </div>
 </div>
+
+<footer>
+    <h3>EventHub</h3>
+    <p>Pridružite se našoj zajednici na društvenim mrežama ili nas kontaktirajte na info@eventhub.com.</p>
+    <p>© 2024 EventHub. Sva prava zadržana.</p>
+    <div class="icon">
+        <span><i class="fab fa-facebook"></i></span>
+        <span><i class="fab fa-twitter"></i></span>
+        <span><i class="fab fa-instagram"></i></span>
+    </div>
+</footer>
 
 <!-- Bootstrap JS and dependencies -->
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>

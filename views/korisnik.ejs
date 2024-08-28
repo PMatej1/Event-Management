@@ -27,9 +27,16 @@
         }
         nav {
             display: flex;
-            justify-content: end;
-            text-align: center;
+            justify-content: space-between;
+            align-items: center;
             margin: 20px 0;
+        }
+        .nav-left {
+            display: flex;
+            align-items: center;
+        }
+        .nav-right {
+            margin-left: auto;
         }
         nav a {
             color: #ffffff;
@@ -79,20 +86,62 @@
         ul li form {
             display: inline;
         }
+        footer {
+            background-color: #333;
+            padding: 50px 0;
+            color: #ffffff;
+            text-align: center;
+            margin-top: 50px;
+        }
+
+        footer h3 {
+            font-size: 32px;
+            color: #f15a24;
+            margin-bottom: 20px;
+        }
+
+        footer p {
+            font-size: 16px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        footer .icon {
+            margin-top: 20px;
+            color: #f15a24;
+            font-size: 24px;
+        }
+
+        footer .icon span {
+            margin: 0 15px;
+        }
+
     </style>
 </head>
 <body>
 <header>
-    <h1>Profil Organizatora</h1>
+    <h1>Profil Korisnika</h1>
 </header>
 
 <nav>
-    <a href="/korisnik/feed">Feed</a>
-    <a href="/korisnik/moji-eventi">Moji eventi</a>
+    <div class="nav-left">
+        <a href="/korisnik/feed">Feed</a>
+        <a href="/korisnik/moji-eventi">Moji eventi</a>
+        <form class="form-inline my-2 my-lg-0" action="/korisnik/rezultati-searcha" method="post">
+            <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" name="kljucnaRijec">
+            <button type="submit">Search</button>
+        </form>
+    </div>
+    <div class="nav-right">
+        <form action="/logout" method="post">
+            <button type="submit">Logout</button>
+        </form>
+    </div>
 </nav>
 
 <div class="container">
-    <form action="/organizator/update-profile" method="POST">
+    <form action="/korisnik/update-profile" method="POST">
         <div class="form-group">
             <label for="ime">Ime</label>
             <input type="text" class="form-control" id="ime" name="ime" value="<%= korisnik.ime %>" required>
@@ -109,37 +158,34 @@
             <label for="korisnicko_ime">Korisničko ime</label>
             <input type="text" class="form-control" id="korisnicko_ime" name="korisnicko_ime" value="<%= korisnik.korisnicko_ime %>" required>
         </div>
-        <div class="form-group">
-            <label for="sifra">Šifra</label>
-            <input type="password" class="form-control" id="sifra" name="sifra" required>
-        </div>
+
         <button type="submit">Spremi</button>
     </form>
 
-    <!-- Korisnikovi interesi -->
-    <div class="form-group mt-4">
+
+    <div class="form-group mt-4" >
         <label>Vaši interesi</label>
         <ul>
             <% korisnikovi_interesi.rows.forEach(function(interes) { %>
-                <li>
-                    <%= interes.naziv_tipa %>
+                <li style="display: flex; justify-content: space-between">
+                    <p><%= interes.naziv_tipa %></p>
                     <form action="/korisnik/obrisi-interes" method="POST">
                         <input type="hidden" name="interes_id" value="<%= interes.id %>">
                         <input type="hidden" name="korisnik_id" value="<%= korisnik.id %>">
-                        <button type="submit" class="btn btn-danger btn-sm">x</button>
+                        <button type="submit" class="btn btn-danger btn-sm">Obriši</button>
                     </form>
                 </li>
             <% }) %>
         </ul>
     </div>
 
-    <!-- Interesi koje korisnik nije odabrao -->
+
     <div class="form-group">
         <label for="ne_interesi">Dodajte još interesa</label>
         <ul id="ne_interesi">
             <% korisnikovi_ne_interesi.rows.forEach(function(neInteres) { %>
-                <li>
-                    <%= neInteres.naziv_tipa %>
+                <li style="display: flex; justify-content: space-between">
+                    <p><%= neInteres.naziv_tipa %></p>
                     <form action="/korisnik/dodaj-interes" method="POST">
                         <input type="hidden" name="interes_id" value="<%= neInteres.id %>">
                         <input type="hidden" name="korisnik_id" value="<%= korisnik.id %>">
@@ -150,6 +196,16 @@
         </ul>
     </div>
 </div>
+<footer>
+    <h3>EventHub</h3>
+    <p>Pridružite se našoj zajednici na društvenim mrežama ili nas kontaktirajte na info@eventhub.com.</p>
+    <p>© 2024 EventHub. Sva prava zadržana.</p>
+    <div class="icon">
+        <span><i class="fab fa-facebook"></i></span>
+        <span><i class="fab fa-twitter"></i></span>
+        <span><i class="fab fa-instagram"></i></span>
+    </div>
+</footer>
 
 <!-- Bootstrap JS and dependencies -->
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>

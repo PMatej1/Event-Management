@@ -4,21 +4,17 @@ var router = express.Router();
 const pool = require('../db');
 
 /* GET home page. */
-router.get('/', async function(req, res, next) {
- let a=await pool.query('select * from interesi_korisnika')
-  console.log(a);
-
-  res.render('index', { title: 'Express' });
+router.get('/', function(req, res, next) {
+  res.render('index');
 });
 
 router.get('/login', function(req, res, next) {
   res.render('login', {error: false});
 });
 
-// treba asinhrono
+
 router.post('/login', async function(req, res, next) {
   try {
-    console.log(req.body.email, req.body.sifra)
     let email = req.body.email;
     let password = req.body.sifra;
     const result = await pool.query('SELECT * FROM korisnik WHERE email = $1', [email]);
@@ -31,14 +27,14 @@ router.post('/login', async function(req, res, next) {
         if (err) {
           console.error(err);
         } else if (result) {
-          console.log("Lozinka je ispravna!");
+
           req.session.isAuth=true;
           req.session.userId=id;
           if (uloga==="user") {
             req.session.isUser=true;
             req.session.isOrganizer=false;
             req.session.isAdmin=false;
-            res.redirect("/korisnik/feed")
+            res.redirect("/korisnik")
           }
           else if (uloga==="organizer") {
             req.session.isUser=false;
@@ -53,8 +49,7 @@ router.post('/login', async function(req, res, next) {
             res.redirect("/admin")
           }
         } else {
-          console.log("Pogrešna lozinka!");
-          // Autentifikacija neuspešna
+          res.render("login", {error: "pogresna lozinka"})
         }
       });
     } else
@@ -102,20 +97,16 @@ router.post("/register", async (req, res)=>{
           res.redirect("/login")
         else {
           try {
-            // Dobivanje ID-a korisnika na osnovu korisničkog imena
+
             const result_id = await pool.query("SELECT id FROM korisnik WHERE korisnicko_ime = $1", [username]);
 
-            // Provjera da li je pronađen korisnik
-            if (result_id.rows.length === 0) {
-              return res.status(404).send("Korisnik nije pronađen.");
-            }
+
 
             const novi_id = result_id.rows[0].id;
 
-            // Dobavljanje svih tipova događaja
             const result_tipovi = await pool.query("SELECT id, naziv_tipa FROM tip_eventa");
             console.log(novi_id, result_tipovi.rows, "vazno")
-            // Renderovanje EJS stranice i prosljeđivanje podataka
+
             res.render("interesi_korisnika", { ponudjeni_tipovi: result_tipovi.rows, novi_id: novi_id });
           } catch (error) {
             console.error("Greška u upitima:", error);
@@ -138,16 +129,16 @@ router.post('/korisnik/sacuvaj-interese/:id', async (req, res) => {
   try {
     const {id}=req.params;
     const interesi = req.body.interesi;
-  console.log(req.body)
+    console.log(req.body)
 
-    // Zatim dodajte nove interese
+
     if (Array.isArray(interesi) && interesi.length > 0) {
       const values = interesi.map(interes => `(${id}, ${interes})`).join(',');
       const query = `INSERT INTO interesi_korisnika (id_korisnika, id_tipa) VALUES ${values}`;
       await pool.query(query);
     }
 
-    res.redirect('/login'); // Promijenite ovo na rutu gdje želite preusmjeriti korisnika nakon uspješnog unosa
+    res.redirect('/login');
   } catch (error) {
     console.error(error);
     res.status(500).send('Greška pri spremanju interesa');

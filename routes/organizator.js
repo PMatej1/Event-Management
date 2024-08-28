@@ -15,7 +15,7 @@ const isOrganizer = (req, res, next) => {
     if(req.session.isOrganizer){
         next();
     }else {
-        req.session.isAdmin ?  res.redirect('/admin') : res.redirect('/korisnik/feed')
+        req.session.isAdmin ?  res.redirect('/admin') : res.redirect('/korisnik')
     }
 }
 router.use(isOrganizer);
@@ -26,18 +26,21 @@ router.get('/', async (req, res) => {
 
     const id = req.session.userId;
     console.log(req.session)
+    const prijave= await pool.query("select k.ime as ime, k.prezime as prezime,  upit1.id_eventa as id_eventa, upit1.naziv as naziv from korisnik as k" +
+        " inner join ( select pk.id_korisnika as id_korisnika, upit.id as id_eventa, upit.naziv as naziv from prijavljeni_korisnici as pk inner join" +
+        "( select id as id, naziv as naziv from event where id_organizatora=$1) as upit on pk.id_eventa=upit.id) as upit1 on k.id=upit1.id_korisnika", [id])
     const result = await pool.query('SELECT * FROM korisnik WHERE id = $1', [id]);
    console.log("vazno", result.rows[0])
-    res.render('organizator', { organizator: result.rows[0] });
+    res.render('organizator', { organizator: result.rows[0], obavijesti:prijave.rows });
 });
 
 router.post("/update-profile", async (req, res) =>{
 
     const id = req.session.userId;
-    const {ime,prezime,email,korisnicko_ime,sifra}=req.body;
+    const {ime,prezime,email,korisnicko_ime}=req.body;
     try {
-        await pool.query("update korisnik set ime=$1, prezime=$2, email=$3, korisnicko_ime=$4, sifra=$5 where id=$6", [ime, prezime, email, korisnicko_ime, sifra, id])
-        res.redirect(`/organizator/${id}`)
+        await pool.query("update korisnik set ime=$1, prezime=$2, email=$3, korisnicko_ime=$4 where id=$5", [ime, prezime, email, korisnicko_ime, id])
+        res.redirect(`/organizator`)
     }catch (err) {
         console.error(err);
         res.status(500).send('Server error');
@@ -68,7 +71,9 @@ router.get('/eventi', async (req, res) => {
 });
 
 router.get("/event/:id", async (req , res)=>{
-
+    let danas = new Date();
+    let zavrsen=false;
+    let recenzije=false;
     const {id}=req.params;
     try{
         const event=await
@@ -79,7 +84,13 @@ router.get("/event/:id", async (req , res)=>{
                 'FROM event INNER JOIN tip_eventa ON event.id_tipa = tip_eventa.id WHERE event.id = $1) as upit on upit.id_lokacije=lokacija.id order by upit.datum asc', [id]);
         const spisak_prijavljenih=await pool.query("select korisnik.ime, korisnik.prezime, korisnik.korisnicko_ime, pk.status from korisnik inner join" +
             " prijavljeni_korisnici as pk on korisnik.id=pk.id_korisnika where pk.id_eventa=$1 ", [id])
-        res.render("event", {event:event, spisak_prijavljenih:spisak_prijavljenih})
+        if (danas>event.rows[0].datum){
+             zavrsen=true;
+             recenzije=await pool.query("select recenzija, komentar from recenzija where id_eventa = $1", [event.rows[0].id])
+        }
+        if (recenzije)
+             res.render("event", {event:event, spisak_prijavljenih:spisak_prijavljenih, recenzije:recenzije.rows, zavrsen:zavrsen})
+        res.render("event", {event:event, spisak_prijavljenih:spisak_prijavljenih,  zavrsen:zavrsen})
     }catch (err) {
         console.error(err);
         res.status(500).send('Server error');
@@ -114,7 +125,7 @@ router.post('/update-event/:id', async (req, res) => {
             'update event set naziv=$1, opis=$2, datum=$3, cijena=$4, status=$5, id_lokacije=$6, id_tipa=$7 where id=$8',
             [naziv, opis, datum, cijena, status, id_lokacije, id_tipa, id]
         );
-        res.redirect(`/organizator/eventi`); // promijeniti ovo
+        res.redirect(`/organizator/eventi`);
     } catch (err) {
         console.error(err);
         res.status(500).send('Server error');
@@ -132,8 +143,8 @@ router.post('/delete-event/:id', async (req, res) => {
         res.status(500).send('Server Error');
     }
 });
-//--------------------OVOOOOO MORASSSS ISPRAVITTIIITITITITITI
-// Prihvatanje korisnika
+
+
 router.post('/event/:eventId/accept-user/:username', async (req, res) => {
 
     const { eventId, username } = req.params;
@@ -148,7 +159,7 @@ router.post('/event/:eventId/accept-user/:username', async (req, res) => {
     }
 });
 
-// Odbijanje korisnika
+
 router.post('/event/:eventId/reject-user/:username', async (req, res) => {
 
     const { eventId, username } = req.params;
