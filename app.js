@@ -1,3 +1,5 @@
+var session = require('express-session');
+
 var createError = require('http-errors');
 var express = require('express');
 var path = require('path');
@@ -7,8 +9,8 @@ var logger = require('morgan');
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var adminRouter = require('./routes/admin');
-var organizatorRouter=require("./routes/organizator")
-var korisnikRouter=require("./routes/korisnik")
+var organizatorRouter = require("./routes/organizator");
+var korisnikRouter = require("./routes/korisnik");
 
 var app = express();
 
@@ -19,14 +21,23 @@ app.set('view engine', 'ejs');
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-app.use(cookieParser());
+app.use(cookieParser('Velika_tajna'));
 app.use(express.static(path.join(__dirname, 'public')));
+
+// Konfiguracija sesija
+app.use(session({
+  secret: 'Velika_tajna',
+  resave: false,
+  saveUninitialized: false,
+  cookie: { secure: false , maxAge: 4000000}
+}));
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
-app.use('/admin', adminRouter)
-app.use("/organizator", organizatorRouter)
-app.use("/korisnik", korisnikRouter)
+
+app.use('/admin', adminRouter);
+app.use("/organizator", organizatorRouter);
+app.use("/korisnik", korisnikRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

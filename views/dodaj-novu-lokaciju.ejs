@@ -12,44 +12,136 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
     <style>
         body {
-            font-family: Arial, sans-serif;
-            background-color: #f8f9fa;
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #1c1c1c;
+            color: #ffffff;
         }
+
+        header {
+            background-color: #000;
+            padding: 20px 0;
+            text-align: center;
+        }
+
+        header h1 {
+            font-size: 36px;
+            color: #f15a24;
+        }
+
+        nav {
+            display: flex;
+            justify-content: end;
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        nav a {
+            color: #ffffff;
+            margin: 0 15px;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        nav a:hover {
+            color: #f15a24;
+        }
+
         .container {
-            margin-top: 50px;
+            padding: 50px 20px;
+            text-align: center;
         }
+
+        h1 {
+            font-size: 48px;
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            font-weight: bold;
+        }
+
         #map {
             height: 400px;
             width: 100%;
             margin-bottom: 20px;
         }
-        .back-button {
+
+        .btn-primary {
+            background-color: #f15a24;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
             cursor: pointer;
-            color: #007bff;
-            font-size: 24px;
-            margin-bottom: 20px;
+            font-size: 16px;
+            transition: background-color 0.3s;
         }
-        .back-button:hover {
-            color: #0056b3;
+
+        .btn-primary:hover {
+            background-color: #000;
+            color: #ffffff;
         }
+
         .btn-delete {
-            color: #fff;
             background-color: #dc3545;
             border-color: #dc3545;
         }
+
         .btn-edit {
-            color: #fff;
             background-color: #ffc107;
             border-color: #ffc107;
         }
+
+        .table-responsive {
+            margin-top: 20px;
+        }
+
+        .thead-dark {
+            background-color: #000;
+            color: #ffffff;
+        }
+
+        .modal-content {
+            background-color: #1c1c1c;
+            color: #ffffff;
+        }
+
+        .modal-header {
+            border-bottom: 1px solid #f15a24;
+        }
+
+        .modal-title {
+            color: #f15a24;
+        }
+
+        .modal-footer {
+            border-top: 1px solid #f15a24;
+        }
+
+        .btn-secondary {
+            background-color: #333;
+            border: none;
+        }
+
+        .btn-secondary:hover {
+            background-color: #555;
+        }
+
     </style>
 </head>
 <body>
+<header>
+    <h1>Dodaj Novu Lokaciju</h1>
+</header>
+<nav>
+    <a href="/admin">Početna</a>
+    <a href="/admin/statistika">Statistika</a>
+    <a href="/admin/dodaj-tip-eventa">Dodaj Tip Eventa</a>
+    <a href="/admin/dodaj-novu-lokaciju">Dodaj Novu Lokaciju</a>
+</nav>
+
 <div class="container">
-    <div class="back-button" onclick="window.location.href='/admin'">
-        <i class="fas fa-arrow-left"></i> Nazad
-    </div>
-    <h1 class="text-center">Dodaj Novu Lokaciju</h1>
     <form action="/admin/dodaj-novu-lokaciju" method="POST">
         <div class="form-group">
             <label for="naziv">Naziv Lokacije</label>
@@ -60,7 +152,8 @@
         <input type="hidden" id="longitude" name="longitude" required>
         <button type="submit" class="btn btn-primary">Dodaj</button>
     </form>
-    <h1 class="text-center">Pregled postojećih lokacija</h1>
+
+    <h1>Pregled postojećih lokacija</h1>
     <div class="table-responsive">
         <table class="table table-bordered table-striped">
             <thead class="thead-dark">
@@ -167,7 +260,6 @@
 
     map.on('click', onMapClick);
 
-    // Fill modal with current data
     $('#editModal').on('show.bs.modal', function (event) {
         var button = $(event.relatedTarget);
         var id = button.data('id');
@@ -184,10 +276,7 @@
         modal.find('#modal-grad').val(grad);
         modal.find('#modal-ulica').val(ulica);
         modal.find('#modal-postanski_broj').val(postanski_broj);
-        modal.find('#modal-latitude').val(latitude);
-        modal.find('#modal-longitude').val(longitude);
     });
 </script>
-
 </body>
 </html>

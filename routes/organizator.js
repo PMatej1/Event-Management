@@ -2,20 +2,42 @@ var express = require('express');
 var router = express.Router();
 const pool = require('../db');
 
+const isAuth = (req, res, next) => {
+    if(req.session.isAuth){
+        next();
+    }else {
+        res.redirect("/login")
+    }
+}
+router.use(isAuth)
+
+const isOrganizer = (req, res, next) => {
+    if(req.session.isOrganizer){
+        next();
+    }else {
+        req.session.isAdmin ?  res.redirect('/admin') : res.redirect('/korisnik/feed')
+    }
+}
+router.use(isOrganizer);
 
 
-router.get('/:id', async (req, res) => {
-    const {id} = req.params; // Assuming you have user session management
+
+router.get('/', async (req, res) => {
+
+    const id = req.session.userId;
+    console.log(req.session)
     const result = await pool.query('SELECT * FROM korisnik WHERE id = $1', [id]);
+   console.log("vazno", result.rows[0])
     res.render('organizator', { organizator: result.rows[0] });
 });
 
 router.post("/update-profile", async (req, res) =>{
-    const id=1//promijenit kad bude sesija
+
+    const id = req.session.userId;
     const {ime,prezime,email,korisnicko_ime,sifra}=req.body;
     try {
         await pool.query("update korisnik set ime=$1, prezime=$2, email=$3, korisnicko_ime=$4, sifra=$5 where id=$6", [ime, prezime, email, korisnicko_ime, sifra, id])
-        res.redirect("/organizator/1")
+        res.redirect(`/organizator/${id}`)
     }catch (err) {
         console.error(err);
         res.status(500).send('Server error');
@@ -25,8 +47,9 @@ router.post("/update-profile", async (req, res) =>{
 
 })
 
-router.get('/eventi/:id', async (req, res) => {
-    const {id} = req.params; // promijeniti ovo
+router.get('/eventi', async (req, res) => {
+
+    const id = req.session.userId;
     try {
         const eventsResult = await
             pool.query('select upit.id as id,  upit.naziv as naziv, upit.opis as opis, upit.datum as datum, upit.cijena as cijena, upit.status as status, upit.tip as tip,' +
@@ -45,6 +68,7 @@ router.get('/eventi/:id', async (req, res) => {
 });
 
 router.get("/event/:id", async (req , res)=>{
+
     const {id}=req.params;
     try{
         const event=await
@@ -64,15 +88,16 @@ router.get("/event/:id", async (req , res)=>{
 })
 
 router.post('/dodaj-event', async (req, res) => {
-    const { naziv, opis, datum, cijena, lokacija, tip } = req.body;
+    console.log(req.body)
+    const { naziv, opis, datum, cijena, id_lokacije, id_tipa } = req.body;
     //const userId = req.session.userId; // Assuming you have user session management
-    const id=1;// promijeniti ovo
+    const id = req.session.userId;
     try {
         await pool.query(
             'INSERT INTO event (naziv, opis, datum, cijena, status, id_lokacije, id_tipa, id_organizatora) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)',
-            [naziv, opis, datum, cijena, "aktivan", lokacija, tip, id]
+            [naziv, opis, datum, cijena, "aktivan", id_lokacije, id_tipa, id]
         );
-        res.redirect('/organizator/eventi/1'); // promijeniti ovo
+        res.redirect('/organizator/eventi'); // promijeniti ovo
     } catch (err) {
         console.error(err);
         res.status(500).send('Server error');
@@ -80,6 +105,7 @@ router.post('/dodaj-event', async (req, res) => {
 });
 
 router.post('/update-event/:id', async (req, res) => {
+
     const { naziv, opis, datum, cijena, status, id_lokacije, id_tipa } = req.body;
 
     const {id}=req.params;
@@ -88,7 +114,7 @@ router.post('/update-event/:id', async (req, res) => {
             'update event set naziv=$1, opis=$2, datum=$3, cijena=$4, status=$5, id_lokacije=$6, id_tipa=$7 where id=$8',
             [naziv, opis, datum, cijena, status, id_lokacije, id_tipa, id]
         );
-        res.redirect('/organizator/eventi/1'); // promijeniti ovo
+        res.redirect(`/organizator/eventi`); // promijeniti ovo
     } catch (err) {
         console.error(err);
         res.status(500).send('Server error');
@@ -96,10 +122,11 @@ router.post('/update-event/:id', async (req, res) => {
 });
 
 router.post('/delete-event/:id', async (req, res) => {
+
     const { id } = req.params;
     try {
         await pool.query('DELETE FROM event WHERE id = $1', [id]);
-        res.redirect('/organizator/eventi/1');
+        res.redirect('/organizator/eventi');
     } catch (err) {
         console.error(err.message);
         res.status(500).send('Server Error');
@@ -108,6 +135,7 @@ router.post('/delete-event/:id', async (req, res) => {
 //--------------------OVOOOOO MORASSSS ISPRAVITTIIITITITITITI
 // Prihvatanje korisnika
 router.post('/event/:eventId/accept-user/:username', async (req, res) => {
+
     const { eventId, username } = req.params;
     let id_korisnika=await pool.query("select id from korisnik where korisnicko_ime=$1", [username])
     id_korisnika=id_korisnika.rows[0].id;
@@ -122,6 +150,7 @@ router.post('/event/:eventId/accept-user/:username', async (req, res) => {
 
 // Odbijanje korisnika
 router.post('/event/:eventId/reject-user/:username', async (req, res) => {
+
     const { eventId, username } = req.params;
     let id_korisnika=await pool.query("select id from korisnik where korisnicko_ime=$1", [username])
     id_korisnika=id_korisnika.rows[0].id;

@@ -10,31 +10,85 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
     <style>
         body {
-            font-family: Arial, sans-serif;
-            background-color: #f8f9fa;
-            padding: 20px;
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #1c1c1c;
+            color: #ffffff;
+        }
+        header {
+            background-color: #000;
+            padding: 20px 0;
+            text-align: center;
+        }
+        header h1 {
+            font-size: 36px;
+            color: #f15a24;
+        }
+        nav {
+            display: flex;
+            justify-content: end;
+            text-align: center;
+            margin: 20px 0;
+        }
+        nav a {
+            color: #ffffff;
+            margin: 0 15px;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        nav a:hover {
+            color: #f15a24;
         }
         .container {
             margin-top: 50px;
         }
-        .navbar {
+        .btn-primary {
+            background-color: #f15a24;
+            border: none;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+        .btn-primary:hover {
+            background-color: darkorange;
+        }
+        footer {
+            background-color: #333;
+            padding: 50px 0;
+            color: #ffffff;
+            text-align: center;
+        }
+        footer h3 {
+            font-size: 32px;
+            color: #f15a24;
             margin-bottom: 20px;
+        }
+        footer p {
+            font-size: 16px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        footer .icon {
+            margin-top: 20px;
+            color: #f15a24;
+            font-size: 24px;
+        }
+        footer .icon span {
+            margin: 0 15px;
         }
     </style>
 </head>
 <body>
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <a class="navbar-brand" href="#">Event Management</a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav ml-auto">
-            <li class="nav-item">
-                <a class="nav-link" href="/organizator/eventi/1">Eventi</a> <!-- izmijeniti kad budu sesije-->
-            </li>
-        </ul>
-    </div>
+<header>
+    <h1>Event Management</h1>
+</header>
+<nav>
+    <a class="nav-link" href="#">Event Management</a>
+    <a class="nav-link" href="/organizator/eventi">Eventi</a>
 </nav>
 
 <div class="container">
@@ -54,7 +108,7 @@
         </div>
         <div class="form-group">
             <label for="korisnicko_ime">Korisničko ime</label>
-            <input type="text" class="form-control" id="korisnicko_ime" name="korisnicko_ime" value="<%= organizator.korisnicko_ime%>" required>
+            <input type="text" class="form-control" id="korisnicko_ime" name="korisnicko_ime" value="<%= organizator.korisnicko_ime %>" required>
         </div>
         <div class="form-group">
             <label for="sifra">Šifra</label>
@@ -63,6 +117,16 @@
         <button type="submit" class="btn btn-primary">Spremi</button>
     </form>
 </div>
+
+<footer>
+    <h3>Event Management</h3>
+    <p>Pratite nas na društvenim mrežama za najnovije informacije o događajima.</p>
+    <div class="icon">
+        <span class="icon-facebook"></span>
+        <span class="icon-twitter"></span>
+        <span class="icon-instagram"></span>
+    </div>
+</footer>
 
 <!-- Bootstrap JS and dependencies -->
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>

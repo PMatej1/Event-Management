@@ -8,66 +8,138 @@
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <style>
         body {
-            font-family: Arial, sans-serif;
-            background-color: #f8f9fa;
-            padding: 20px;
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #1c1c1c;
+            color: #ffffff;
         }
-        .container {
-            margin-top: 50px;
+
+        header {
+            background-color: #000;
+            padding: 20px 0;
+            text-align: center;
         }
-        .navbar {
-            margin-bottom: 20px;
+
+        header h1 {
+            font-size: 36px;
+            color: #f15a24;
         }
+
+        nav {
+            display: flex;
+            justify-content: end;
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        nav a {
+            color: #ffffff;
+            margin: 0 15px;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        nav a:hover {
+            color: #f15a24;
+        }
+
+        main {
+            text-align: center;
+            padding: 50px 20px;
+        }
+
         .btn-filter {
-            margin-right: 10px;
+            background-color: #000;
+            border: 2px solid #f15a24;
+            color: #f15a24;
+            padding: 10px 20px;
+            text-transform: uppercase;
+            font-weight: bold;
+            text-decoration: none;
         }
+
+        .btn-filter:hover {
+            background-color: #f15a24;
+            color: #ffffff;
+        }
+
         .card-wrapper {
             display: flex;
             flex-direction: column;
             align-items: center;
         }
+
         .card {
             width: 60%;
             margin-bottom: 20px;
+            background-color: #333;
+            border: 2px solid #f15a24;
+            color: #ffffff;
         }
+
         .btn-register {
-            background-color: #007bff;
-            color: #fff;
+            background-color: orange;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+            margin: 10px;
         }
+
         .btn-register:hover {
-            background-color: #0056b3;
-            color: #fff;
+            background-color: darkorange;
+        }
+
+        footer {
+            background-color: #333;
+            padding: 50px 0;
+            color: #ffffff;
+            text-align: center;
+        }
+
+        footer h3 {
+            font-size: 32px;
+            color: #f15a24;
+            margin-bottom: 20px;
+        }
+
+        footer p {
+            font-size: 16px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        footer .icon {
+            margin-top: 20px;
+            color: #f15a24;
+            font-size: 24px;
+        }
+
+        footer .icon span {
+            margin: 0 15px;
         }
     </style>
 </head>
 <body>
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <a class="navbar-brand" href="/">Event Management</a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav mr-auto">
-            <li class="nav-item">
-                <a class="nav-link" href="/profil">Profil</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="/events">Eventi</a>
-            </li>
-        </ul>
-        <form class="form-inline my-2 my-lg-0" action="/rezultati-searcha" method="GET">
-            <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" name="query">
-            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-        </form>
-    </div>
+<header>
+    <h1>Rezultati pretrage</h1>
+</header>
+
+<nav>
+    <a href="/profil">Profil</a>
+    <a href="/events">Eventi</a>
 </nav>
 
-<div class="container">
-    <h1 class="text-center">Rezultati pretrage</h1>
+<main>
     <div class="text-center">
-        <button class="btn btn-filter btn-outline-primary" onclick="showResults('korisnici')">Korisnici</button>
-        <button class="btn btn-filter btn-outline-primary" onclick="showResults('lokacije')">Lokacije</button>
-        <button class="btn btn-filter btn-outline-primary" onclick="showResults('eventi')">Eventi</button>
+        <button class="btn-filter" onclick="showResults('korisnici')">Korisnici</button>
+        <button class="btn-filter" onclick="showResults('lokacije')">Lokacije</button>
+        <button class="btn-filter" onclick="showResults('eventi')">Eventi</button>
     </div>
     <div id="korisnici" class="card-wrapper" style="display: none;">
         <% if (korisnici.length > 0) { korisnici.forEach(function(korisnik) { %>
@@ -101,13 +173,21 @@
                     <p class="card-text"><small class="text-muted">Lokacija: <%= event.mjesto %></small></p>
                     <p class="card-text"><small class="text-muted">Cijena: <%= event.cijena %> KM</small></p>
                     <form action="/korisnik/prijava-na-event/<%= event.id %>" method="POST" style="display:inline;">
-                        <button type="submit" class="btn btn-register btn-sm">Prijavi se</button>
+                        <button type="submit" class="btn-register">Prijavi se</button>
                     </form>
                 </div>
             </div>
         <% }) } %>
     </div>
-</div>
+</main>
+
+<footer>
+    <h3>Kontaktirajte nas</h3>
+    <p>Ako imate pitanja ili trebate podršku, slobodno nas kontaktirajte putem naše kontakt stranice.</p>
+    <div class="icon">
+        <span>&#xf16d;</span> <!-- Social media icon example -->
+    </div>
+</footer>
 
 <!-- Bootstrap JS and dependencies -->
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>

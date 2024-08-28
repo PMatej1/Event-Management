@@ -3,8 +3,27 @@ var router = express.Router();
 const pool = require('../db');
 const axios = require ("axios")
 
+
+const isAuth = (req, res, next) => {
+    if(req.session.isAuth){
+        next();
+    }else {
+        res.redirect("/login")
+    }
+}
+router.use(isAuth)
+const isAdmin = (req, res, next) => {
+    if(req.session.isAdmin){
+        next();
+    }else {
+        req.session.isUser ?  res.redirect('/korisnik/feed') : res.redirect('/organizator')
+    }
+}
+router.use(isAdmin);
+
 /* GET home page. */
 router.get('/', async function(req, res, next) {
+    console.log(req.session)
 
     try {
         const korisnici = await pool.query("select * from korisnik where uloga <> $1 order by korisnicko_ime asc", ["admin"]);
@@ -20,6 +39,7 @@ router.get('/', async function(req, res, next) {
 });
 
 router.get("/dodaj-tip-eventa", async (req, res)=>{
+
     try {
         const tipovi_eventa = await pool.query("select * from tip_eventa order by naziv_tipa asc")
         res.render("dodaj-tip-eventa", {tip_eventa: tipovi_eventa.rows})
@@ -30,6 +50,7 @@ router.get("/dodaj-tip-eventa", async (req, res)=>{
 })
 
 router.get("/dodaj-novu-lokaciju", async (req, res)=>{
+
     try {
         const trenutne_lokacije = await pool.query("select * from lokacija order by naziv asc")
         res.render("dodaj-novu-lokaciju", {trenutne_lokacije: trenutne_lokacije.rows})
@@ -40,6 +61,7 @@ router.get("/dodaj-novu-lokaciju", async (req, res)=>{
 })
 
 router.post('/delete-user/:id', async (req, res) => {
+
     const { id } = req.params;
     try {
         await pool.query('DELETE FROM korisnik WHERE id = $1', [id]);
@@ -51,6 +73,7 @@ router.post('/delete-user/:id', async (req, res) => {
 });
 
 router.post('/block-user/:id', async (req, res) => {
+
     const { id } = req.params;
     try {
         await pool.query('update korisnik set status = $2 WHERE id = $1', [id,"blokiran"]);
@@ -62,6 +85,7 @@ router.post('/block-user/:id', async (req, res) => {
 });
 
 router.post('/block-user-on-15-days/:id', async (req, res) => {
+
     const { id } = req.params;
     let today = new Date();
     let futureDate = new Date(today);
@@ -77,6 +101,7 @@ router.post('/block-user-on-15-days/:id', async (req, res) => {
 });
 
 router.post('/unblock-user/:id', async (req, res) => {
+
     const { id } = req.params;
     try {
         await pool.query('update korisnik set status = $2, datum_deblokiranja=$3 WHERE id = $1', [id,"aktivan", null]);
@@ -88,6 +113,7 @@ router.post('/unblock-user/:id', async (req, res) => {
 });
 
 router.post("/dodaj-tip-eventa",async (req,res)=>{
+
     const {naziv}=req.body
     try {
         await pool.query("insert into tip_eventa (naziv_tipa) values ($1)", [naziv])
@@ -100,6 +126,7 @@ router.post("/dodaj-tip-eventa",async (req,res)=>{
 })
 
 router.post("/dodaj-novu-lokaciju",async (req,res)=>{
+
     const {naziv, latitude, longitude}=req.body
 
     try {
@@ -129,6 +156,7 @@ router.post("/dodaj-novu-lokaciju",async (req,res)=>{
 })
 
 router.post('/delete-tip-eventa/:id', async (req, res) => {
+
     const { id } = req.params;
     try {
         await pool.query('DELETE FROM tip_eventa WHERE id = $1', [id]);
@@ -140,6 +168,7 @@ router.post('/delete-tip-eventa/:id', async (req, res) => {
 });
 
 router.post('/delete-lokacija/:id', async (req, res) => {
+
     const { id } = req.params;
     try {
         await pool.query('DELETE FROM lokacija WHERE id = $1', [id]);
@@ -151,6 +180,7 @@ router.post('/delete-lokacija/:id', async (req, res) => {
 });
 
 router.post('/update-lokacija', async (req, res) => {
+
     const { id, naziv, grad, ulica, postanski_broj, latitude, longitude } = req.body;
 
     try {
@@ -169,6 +199,7 @@ router.post('/update-lokacija', async (req, res) => {
 });
 
 router.get('/statistika', async (req, res) => {
+
     try {
         const brojKorisnika = await pool.query('SELECT COUNT(*) FROM korisnik');
         const brojOrganizatora = await pool.query('SELECT COUNT(*) FROM korisnik WHERE uloga = $1', ['organizator']);
@@ -281,6 +312,7 @@ router.get('/statistika', async (req, res) => {
 
 
 router.post('/edit-tip-eventa/:id', async (req, res) => {
+
     const { id } = req.params;
     const { naziv } = req.body;
     try {

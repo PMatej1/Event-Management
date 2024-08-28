@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,25 +9,52 @@
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <style>
         body {
-            font-family: Arial, sans-serif;
-            background-color: #f8f9fa;
-            padding: 20px;
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #1c1c1c;
+            color: #ffffff;
         }
+
         .container {
             margin-top: 50px;
         }
+
         .navbar {
+            background-color: #000;
+            padding: 20px 0;
             margin-bottom: 20px;
         }
+
+        .navbar-brand,
+        .nav-link {
+            color: #ffffff !important;
+            font-weight: bold;
+        }
+
+        .navbar-brand:hover,
+        .nav-link:hover {
+            color: #f15a24 !important;
+        }
+
+        h1 {
+            color: #f15a24;
+        }
+
         .card-wrapper {
             display: flex;
             flex-direction: column;
             align-items: center;
         }
+
         .card {
             width: 60%;
             margin-bottom: 20px;
+            background-color: #333;
+            border: 2px solid #f15a24;
+            color: #ffffff;
         }
+
         .status {
             display: inline-block;
             width: 15px;
@@ -34,47 +62,86 @@
             border-radius: 50%;
             margin-right: 10px;
         }
+
         .status.confirmed {
             background-color: green;
         }
+
         .status.rejected {
             background-color: red;
         }
+
         .status.pending {
             background-color: grey;
         }
-        .btn-cancel {
-            background-color: #dc3545;
-            color: #fff;
-        }
-        .btn-cancel:hover {
-            background-color: #c82333;
-            color: #fff;
-        }
+
+        .btn-cancel,
         .btn-rate {
-            background-color: #007bff;
-            color: #fff;
+            background-color: orange;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+            margin: 10px;
         }
+
+        .btn-cancel:hover,
         .btn-rate:hover {
-            background-color: #0056b3;
-            color: #fff;
+            background-color: darkorange;
         }
+
         .star-rating {
             display: flex;
             justify-content: center;
         }
+
         .star {
             font-size: 2em;
             color: grey;
             cursor: pointer;
         }
+
         .star.checked {
             color: gold;
         }
+
+        footer {
+            background-color: #333;
+            padding: 50px 0;
+            color: #ffffff;
+            text-align: center;
+        }
+
+        footer h3 {
+            font-size: 32px;
+            color: #f15a24;
+            margin-bottom: 20px;
+        }
+
+        footer p {
+            font-size: 16px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        footer .icon {
+            margin-top: 20px;
+            color: #f15a24;
+            font-size: 24px;
+        }
+
+        footer .icon span {
+            margin: 0 15px;
+        }
     </style>
 </head>
+
 <body>
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
+<nav class="navbar navbar-expand-lg navbar-dark">
     <a class="navbar-brand" href="/">Event Management</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
@@ -178,26 +245,36 @@
             }
         });
 
-        $('#rateModal').on('show.bs.modal', function (event) {
+        $('#rateModal').on('show.bs.modal', function(event) {
             const button = $(event.relatedTarget);
             const eventId = button.data('event-id');
             const modal = $(this);
             modal.find('#rateEventId').val(eventId);
-        });
 
-        const stars = document.querySelectorAll('.star');
-        stars.forEach(star => {
-            star.addEventListener('click', function() {
-                const value = this.getAttribute('data-value');
-                document.getElementById('ratingValue').value = value;
+            // Resetovanje zvezdica
+            const stars = modal.find('.star');
+            stars.removeClass('checked');
+            modal.find('#ratingValue').val('');
 
-                stars.forEach(s => s.classList.remove('checked'));
-                for (let i = 0; i < value; i++) {
-                    stars[i].classList.add('checked');
-                }
+            // Klik na zvezdicu
+            stars.on('click', function() {
+                const value = $(this).data('value');
+                stars.removeClass('checked');
+                $(this).prevAll().addBack().addClass('checked');
+                modal.find('#ratingValue').val(value);
             });
         });
     });
 </script>
+
+<footer>
+    <h3>Kontaktirajte nas</h3>
+    <p>Ako imate bilo kakva pitanja ili trebate pomoć, slobodno nas kontaktirajte putem emaila ili telefona. Tu smo da vam pomognemo!</p>
+    <div class="icon">
+        <span>&#9742; Telefon: +387 33 123 456</span>
+        <span>&#9993; Email: support@eventmanagement.com</span>
+    </div>
+</footer>
 </body>
+
 </html>

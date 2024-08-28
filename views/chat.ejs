@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat</title>
+    body {
+    background-color: #121212;
+    color: #ffffff;
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    }
+
+    .chat-container {
+    width: 90%;
+    max-width: 600px;
+    background-color: #1e1e1e;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+    }
+
+    #chat-window {
+    height: 300px;
+    overflow-y: scroll;
+    margin-bottom: 10px;
+    border: 1px solid #ff6600;
+    border-radius: 5px;
+    padding: 10px;
+    background-color: #2e2e2e;
+    }
+
+    #output, #feedback {
+    padding: 5px;
+    }
+
+    #message {
+    width: calc(100% - 100px);
+    padding: 10px;
+    border: 1px solid #ff6600;
+    border-radius: 5px;
+    background-color: #333;
+    color: #fff;
+    }
+
+    .chat-button {
+    width: 80px;
+    background-color: #ff6600;
+    border: none;
+    border-radius: 5px;
+    color: #ffffff;
+    padding: 10px;
+    cursor: pointer;
+    }
+
+    .chat-button:hover {
+    background-color: #cc5200;
+    }
+
+</head>
+<body>
+<div class="chat-container">
+    <div id="chat-window">
+        <div id="output"></div>
+        <div id="feedback"></div>
+    </div>
+    <input id="message" type="text" placeholder="Unesite poruku..." autocomplete="off">
+    <button id="send" class="chat-button">Pošalji</button>
+</div>
+
+<script src="/socket.io/socket.io.js"></script>
+<script >
+    const socket = io();
+
+    const message = document.getElementById('message');
+    const output = document.getElementById('output');
+    const feedback = document.getElementById('feedback');
+    const sendButton = document.getElementById('send');
+
+    sendButton.addEventListener('click', () => {
+        socket.emit('chat', {
+            message: message.value
+        });
+        message.value = '';
+    });
+
+    message.addEventListener('keypress', () => {
+        socket.emit('typing');
+    });
+
+    socket.on('chat', (data) => {
+        feedback.innerHTML = '';
+        output.innerHTML += `<p><strong>${data.user}:</strong> ${data.message}</p>`;
+    });
+
+    socket.on('typing', (data) => {
+        feedback.innerHTML = `<p><em>${data.user} is typing...</em></p>`;
+    });
+</script>
+</body>
+</html>

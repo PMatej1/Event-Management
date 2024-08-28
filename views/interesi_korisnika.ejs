@@ -4,43 +4,90 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Odabir Interesa</title>
-    <!-- Bootstrap CSS -->
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <!-- Font Awesome CSS -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
     <style>
         body {
-            font-family: Arial, sans-serif;
-            background-color: #f8f9fa;
-            padding: 20px;
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #1c1c1c;
+            color: #ffffff;
         }
+
+        header {
+            background-color: #000;
+            padding: 20px 0;
+            text-align: center;
+        }
+
+        header h1 {
+            font-size: 36px;
+            color: #f15a24;
+        }
+
+        main {
+            text-align: center;
+            padding: 50px 20px;
+        }
+
+        main h2 {
+            font-size: 48px;
+            margin-bottom: 20px;
+        }
+
+        .form-check-label {
+            font-size: 18px;
+            margin-bottom: 10px;
+            color: #ffffff;
+        }
+
+        button {
+            background-color: orange;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+            margin: 10px;
+        }
+
+        button:hover {
+            background-color: darkorange;
+        }
+
         .container {
-            margin-top: 50px;
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #333;
+            padding: 20px;
+            border-radius: 10px;
         }
     </style>
 </head>
 <body>
-<div class="container">
-    <h1 class="text-center">Odabir Interesa</h1>
-    <form action="/korisnik/sacuvaj-interese/<%= novi_id %>" method="POST">
-        <div class="form-group">
-            <label for="interesi">Odaberite Vaše Interese</label>
-            <div id="interesi">
-                <% ponudjeni_tipovi.rows.forEach(function(tip) { %>
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" id="interes<%= tip.id %>" name="interesi" value=<%= tip.id %>>
-                        <label class="form-check-label" for="interes<%= tip.id %>"><%= tip.naziv_tipa %></label>
-                    </div>
-                <% }) %>
+<header>
+    <h1>Odabir Interesa</h1>
+</header>
+<main>
+    <div class="container">
+        <form action="/korisnik/sacuvaj-interese/<%= novi_id %>" method="POST">
+            <div class="form-group">
+                <h2>Odaberite Vaše Interese</h2>
+                <div id="interesi">
+                    <% ponudjeni_tipovi.forEach(function(tip) { %>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="interes<%= tip.id %>" name="interesi" value="<%= tip.id %>">
+                            <label class="form-check-label" for="interes<%= tip.id %>"><%= tip.naziv_tipa %></label>
+                        </div>
+                    <% }) %>
+                </div>
             </div>
-        </div>
-        <button type="submit" class="btn btn-primary">Sačuvaj Interese</button>
-    </form>
-</div>
-
-<!-- Bootstrap JS and dependencies -->
-<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+            <button type="submit">Sačuvaj Interese</button>
+        </form>
+    </div>
+</main>
 </body>
 </html>

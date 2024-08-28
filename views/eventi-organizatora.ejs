@@ -10,50 +10,125 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
     <style>
         body {
-            font-family: Arial, sans-serif;
-            background-color: #f8f9fa;
-            padding: 20px;
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #1c1c1c;
+            color: #ffffff;
         }
-        .container {
-            margin-top: 50px;
+
+        header {
+            background-color: #000;
+            padding: 20px 0;
+            text-align: center;
         }
-        .navbar {
+
+        header h1 {
+            font-size: 36px;
+            color: #f15a24;
+        }
+
+        nav {
+            display: flex;
+            justify-content: end;
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        nav a {
+            color: #ffffff;
+            margin: 0 15px;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        nav a:hover {
+            color: #f15a24;
+        }
+
+        main {
+            text-align: center;
+            padding: 50px 20px;
+        }
+
+        main h2 {
+            font-size: 48px;
             margin-bottom: 20px;
         }
-        .btn-delete {
-            color: #fff;
-            background-color: #dc3545;
-            border-color: #dc3545;
+
+        main p {
+            font-size: 18px;
+            margin-bottom: 40px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
         }
+
+        .table {
+            color: #ffffff;
+        }
+
+        .table thead {
+            background-color: #000;
+        }
+
+        .table thead th {
+            color: #f15a24;
+        }
+
+        .btn-delete {
+            background-color: orange;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+            margin: 10px;
+        }
+
         .btn-delete:hover {
-            background-color: #c82333;
-            border-color: #bd2130;
+            background-color: darkorange;
+        }
+
+        .btn-warning {
+            background-color: #f15a24;
+            border: 2px solid #f15a24;
+            color: #ffffff;
+        }
+
+        .btn-warning:hover {
+            background-color: #000;
+            color: #f15a24;
+        }
+
+        .btn-info {
+            background-color: #000;
+            border: 2px solid #f15a24;
+            color: #f15a24;
+        }
+
+        .btn-info:hover {
+            background-color: #f15a24;
+            color: #ffffff;
         }
     </style>
 </head>
 <body>
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <a class="navbar-brand" href="/">Event Management</a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav">
-            <li class="nav-item">
-                <a class="nav-link" href="/organizator/1">Profil</a> <!-- promijeniti ovo -->
-            </li>
+<header>
+    <h1>Moji Eventi</h1>
+</header>
 
-        </ul>
-    </div>
+<nav>
+    <a href="/organizator">Profil</a>
 </nav>
 
-<div class="container">
-    <h1 class="text-center">Moji Eventi</h1>
-
+<main>
     <!-- Tabela sa eventima -->
     <div class="table-responsive">
         <table class="table table-bordered table-striped">
-            <thead class="thead-dark">
+            <thead>
             <tr>
                 <th>Naziv</th>
                 <th>Opis</th>
@@ -156,11 +231,11 @@
     <form action="/organizator/dodaj-event" method="POST">
         <div class="form-group">
             <label for="naziv">Naziv</label>
-            <input type="text" class="form-control" id="naziv" name="naziv" placeholder="Unesite naziv eventa" required>
+            <input type="text" class="form-control" id="naziv" name="naziv" placeholder="Unesite naziv" required>
         </div>
         <div class="form-group">
             <label for="opis">Opis</label>
-            <textarea class="form-control" id="opis" name="opis" rows="3" placeholder="Unesite opis eventa" required></textarea>
+            <textarea class="form-control" id="opis" name="opis" placeholder="Unesite opis" required></textarea>
         </div>
         <div class="form-group">
             <label for="datum">Datum</label>
@@ -168,31 +243,39 @@
         </div>
         <div class="form-group">
             <label for="cijena">Cijena</label>
-            <input type="number" class="form-control" id="cijena" name="cijena" placeholder="Unesite cijenu eventa" required>
+            <input type="number" class="form-control" id="cijena" name="cijena" placeholder="Unesite cijenu" required>
+        </div>
+        <div class="form-group">
+            <label for="status">Status</label>
+            <select class="form-control" id="status" name="status" required>
+                <option value="aktivan">Aktivan</option>
+                <option value="otkazan">Otkazan</option>
+            </select>
         </div>
         <div class="form-group">
             <label for="lokacija">Lokacija</label>
-            <select class="form-control" id="lokacija" name="lokacija" required>
+            <select class="form-control" id="lokacija" name="id_lokacije" required>
                 <% lokacije.forEach(function(lokacija) { %>
-                    <option value="<%= lokacija.id %>"><%= lokacija.mjesto %></option>
+                    <option value="<%= lokacija.id %>"><%= lokacija.mjesto %>, <%= lokacija.grad %>, <%= lokacija.ulica %></option>
                 <% }) %>
             </select>
         </div>
         <div class="form-group">
             <label for="tip">Tip</label>
-            <select class="form-control" id="tip" name="tip" required>
+            <select class="form-control" id="tip" name="id_tipa" required>
                 <% tipovi.forEach(function(tip) { %>
                     <option value="<%= tip.id %>"><%= tip.naziv_tipa %></option>
                 <% }) %>
             </select>
         </div>
-        <button type="submit" class="btn btn-primary">Dodaj Event</button>
+        <button type="submit" class="btn btn-primary">Dodaj</button>
     </form>
-</div>
+</main>
 
-<!-- Bootstrap JS and dependencies -->
+<!-- Bootstrap JS -->
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
 </body>
 </html>

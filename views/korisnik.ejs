@@ -10,38 +10,88 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
     <style>
         body {
-            font-family: Arial, sans-serif;
-            background-color: #f8f9fa;
-            padding: 20px;
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #1c1c1c;
+            color: #ffffff;
+        }
+        header {
+            background-color: #000;
+            padding: 20px 0;
+            text-align: center;
+        }
+        header h1 {
+            font-size: 36px;
+            color: #f15a24;
+        }
+        nav {
+            display: flex;
+            justify-content: end;
+            text-align: center;
+            margin: 20px 0;
+        }
+        nav a {
+            color: #ffffff;
+            margin: 0 15px;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        nav a:hover {
+            color: #f15a24;
         }
         .container {
             margin-top: 50px;
         }
-        .navbar {
-            margin-bottom: 20px;
+        .form-group label {
+            color: #f15a24;
+        }
+        .form-control {
+            background-color: #333;
+            border: 1px solid #555;
+            color: #ffffff;
+        }
+        .form-control:focus {
+            border-color: #f15a24;
+            box-shadow: none;
+        }
+        button {
+            background-color: orange;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+            margin: 10px;
+        }
+        button:hover {
+            background-color: darkorange;
+        }
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+        ul li {
+            margin-bottom: 10px;
+        }
+        ul li form {
+            display: inline;
         }
     </style>
 </head>
 <body>
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <a class="navbar-brand" href="#">Event Management</a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav ml-auto">
-            <li class="nav-item">
-                <a class="nav-link" href="/korisnik/feed">Feed</a> <!-- izmijeniti kad budu sesije-->
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="/korisnik/moji-eventi">Moji eventi</a> <!-- izmijeniti kad budu sesije-->
-            </li>
-        </ul>
-    </div>
+<header>
+    <h1>Profil Organizatora</h1>
+</header>
+
+<nav>
+    <a href="/korisnik/feed">Feed</a>
+    <a href="/korisnik/moji-eventi">Moji eventi</a>
 </nav>
 
 <div class="container">
-    <h1 class="text-center">Profil Organizatora</h1>
     <form action="/organizator/update-profile" method="POST">
         <div class="form-group">
             <label for="ime">Ime</label>
@@ -63,7 +113,7 @@
             <label for="sifra">Šifra</label>
             <input type="password" class="form-control" id="sifra" name="sifra" required>
         </div>
-        <button type="submit" class="btn btn-primary">Spremi</button>
+        <button type="submit">Spremi</button>
     </form>
 
     <!-- Korisnikovi interesi -->
@@ -73,7 +123,7 @@
             <% korisnikovi_interesi.rows.forEach(function(interes) { %>
                 <li>
                     <%= interes.naziv_tipa %>
-                    <form action="/korisnik/obrisi-interes" method="POST" style="display:inline;">
+                    <form action="/korisnik/obrisi-interes" method="POST">
                         <input type="hidden" name="interes_id" value="<%= interes.id %>">
                         <input type="hidden" name="korisnik_id" value="<%= korisnik.id %>">
                         <button type="submit" class="btn btn-danger btn-sm">x</button>
@@ -90,7 +140,7 @@
             <% korisnikovi_ne_interesi.rows.forEach(function(neInteres) { %>
                 <li>
                     <%= neInteres.naziv_tipa %>
-                    <form action="/korisnik/dodaj-interes" method="POST" style="display:inline;">
+                    <form action="/korisnik/dodaj-interes" method="POST">
                         <input type="hidden" name="interes_id" value="<%= neInteres.id %>">
                         <input type="hidden" name="korisnik_id" value="<%= korisnik.id %>">
                         <button type="submit" class="btn btn-success btn-sm">Dodaj</button>

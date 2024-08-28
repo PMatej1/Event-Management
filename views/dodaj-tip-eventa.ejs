@@ -10,41 +10,139 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
     <style>
         body {
-            font-family: Arial, sans-serif;
-            background-color: #f8f9fa;
-            padding: 20px;
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #1c1c1c;
+            color: #ffffff;
         }
+
+        header {
+            background-color: #000;
+            padding: 20px 0;
+            text-align: center;
+        }
+
+        header h1 {
+            font-size: 36px;
+            color: #f15a24;
+        }
+
+        nav {
+            display: flex;
+            justify-content: end;
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        nav a {
+            color: #ffffff;
+            margin: 0 15px;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        nav a:hover {
+            color: #f15a24;
+        }
+
         .container {
-            margin-top: 50px;
+            padding: 50px 20px;
+            text-align: center;
         }
-        .back-button {
-            cursor: pointer;
-            color: #007bff;
-            font-size: 24px;
+
+        h1 {
+            font-size: 48px;
             margin-bottom: 20px;
         }
-        .back-button:hover {
-            color: #0056b3;
+
+        .form-group label {
+            font-weight: bold;
         }
+
+        .table-responsive {
+            margin-top: 20px;
+        }
+
+        .thead-dark {
+            background-color: #000;
+            color: #ffffff;
+        }
+
+        .modal-content {
+            background-color: #1c1c1c;
+            color: #ffffff;
+        }
+
+        .modal-header {
+            border-bottom: 1px solid #f15a24;
+        }
+
+        .modal-title {
+            color: #f15a24;
+        }
+
+        .modal-footer {
+            border-top: 1px solid #f15a24;
+        }
+
+        .btn {
+            background-color: orange;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+            margin: 10px;
+        }
+
+        .btn:hover {
+            background-color: darkorange;
+        }
+
         .btn-delete {
-            color: #fff;
             background-color: #dc3545;
             border-color: #dc3545;
+        }
+
+        .btn-warning {
+            background-color: #ffc107;
+            border-color: #ffc107;
+        }
+
+        a {
+            text-decoration: none;
+        }
+
+        a i {
+            font-size: 24px;
+            color: #f15a24;
+        }
+
+        a:hover i {
+            color: #ffffff;
         }
     </style>
 </head>
 <body>
-<div class="container">
+<header>
+    <h1>Dodaj Tip Eventa</h1>
+</header>
+<nav>
     <a href="/admin">
         <i class="fas fa-arrow-left"></i> Nazad
     </a>
-    <h1 class="text-center">Dodaj Tip Eventa</h1>
+</nav>
+
+<div class="container">
     <form action="/admin/dodaj-tip-eventa" method="POST">
         <div class="form-group">
             <label for="naziv">Naziv Tip Eventa</label>
             <input type="text" class="form-control" id="naziv" name="naziv" placeholder="Unesite naziv tipa eventa" required>
         </div>
-        <button type="submit" class="btn btn-primary">Dodaj</button>
+        <button type="submit" class="btn">Dodaj</button>
     </form>
 
     <div class="table-responsive">
@@ -81,7 +179,7 @@
                                                 <label for="naziv<%= tip.id %>">Naziv Tip Eventa</label>
                                                 <input type="text" class="form-control" id="naziv<%= tip.id %>" name="naziv" value="<%= tip.naziv_tipa %>" required>
                                             </div>
-                                            <button type="submit" class="btn btn-primary">Spremi</button>
+                                            <button type="submit" class="btn">Spremi</button>
                                         </form>
                                     </div>
                                 </div>

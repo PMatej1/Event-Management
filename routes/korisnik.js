@@ -2,6 +2,23 @@ var express = require('express');
 var router = express.Router();
 var pool = require("../db")
 
+const isAuth = (req, res, next) => {
+    if(req.session.isAuth){
+        next();
+    }else {
+        res.redirect("/login")
+    }
+}
+router.use(isAuth)
+const isUser = (req, res, next) => {
+    if(req.session.isUser){
+        next();
+    }else {
+       req.session.isAdmin ?  res.redirect('/admin') : res.redirect('/organizator')
+    }
+}
+router.use(isUser);
+
 /* GET users listing. */
 router.get('/', function(req, res, next) {
     res.send('respond with a resource');
@@ -10,6 +27,8 @@ router.get('/', function(req, res, next) {
 
 
 router.post('/dodaj-interes', async (req, res) => {
+
+
     const { interes_id, korisnik_id } = req.body;
     console.log(req.body)
 
@@ -22,6 +41,10 @@ router.post('/dodaj-interes', async (req, res) => {
 });
 
 router.post('/obrisi-interes', async (req, res) => {
+    if (!req.session.isAuth) {
+        res.redirect("/login")
+        return
+    }
     const { interes_id, korisnik_id } = req.body;
     console.log(req.body)
 
@@ -35,6 +58,7 @@ router.post('/obrisi-interes', async (req, res) => {
 
 router.get('/feed', async (req, res) => {
     //const {id} = req.params; // Assuming you have user session management
+
     const id=1;//promijeniti kad budu sesije
     try {
         const eventsResult = await
@@ -197,6 +221,7 @@ router.get('/feed', async (req, res) => {
 });
 
 router.post("/prijava-na-event/:id", async (req, res)=>{
+
     const idKorisnika=6; // promijeniti
     const {id}=req.params;
     try {
@@ -210,6 +235,8 @@ router.post("/prijava-na-event/:id", async (req, res)=>{
 })
 
 router.post("/rezultati-searcha", async (req, res)=>{
+
+
     const {kljucnaRijec}=req.body;
     //console.log(kljucnaRijec)
     try {
@@ -230,6 +257,8 @@ router.post("/rezultati-searcha", async (req, res)=>{
 })
 
 router.get("/moji-eventi", async (req, res) => {
+
+
     const id=1;//promijeniti ovo
     try{
         const eventi= await pool.query('select upit.id as id,  upit.naziv as naziv, upit.opis as opis, upit.datum as datum, upit.cijena as cijena, upit.status as status, upit.tip as tip,' +
@@ -249,6 +278,8 @@ router.get("/moji-eventi", async (req, res) => {
 
 })
 router.post("/otkazi-prijavu/:id", async (req, res)=>{
+
+
     const idKorisnika=1;// promijeniti ovo
     const {id}=req.params
     try{
@@ -262,6 +293,7 @@ router.post("/otkazi-prijavu/:id", async (req, res)=>{
     }
 })
 router.get('/:id', async (req, res) => {
+
     const {id} = req.params; // Assuming you have user session management
     try {
         const result = await pool.query('SELECT * FROM korisnik WHERE id = $1', [id]);
@@ -283,6 +315,8 @@ router.get('/:id', async (req, res) => {
 });
 
 router.get('/lokacija/eventi/:id', async (req, res) => {
+
+
     try {
         const { id } = req.params;
         const lokacijaResult = await pool.query('SELECT * FROM lokacija WHERE id = $1', [id]);
@@ -298,6 +332,8 @@ router.get('/lokacija/eventi/:id', async (req, res) => {
 
 // Route to get events by organizer
 router.get('/eventi/:id', async (req, res) => {
+
+
     try {
         const { id } = req.params;
         const korisnikResult = await pool.query('SELECT * FROM korisnik WHERE id = $1', [id]);

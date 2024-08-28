@@ -7,41 +7,59 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
     <style>
-        /* Resetovanje osnovnih stilova */
-        * {
+        body {
+            font-family: 'Arial', sans-serif;
             margin: 0;
             padding: 0;
-            box-sizing: border-box;
+            background-color: #1c1c1c;
+            color: #ffffff;
         }
 
-        /* Stilizacija tela i pozadinske slike */
-        body {
+        header {
+            background-color: #000;
+            padding: 20px 0;
+            text-align: center;
+        }
+
+        header h1 {
+            font-size: 36px;
+            color: #f15a24;
+        }
+
+        nav {
             display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            font-family: Arial, sans-serif;
-            background: url("https://t3.ftcdn.net/jpg/07/33/50/26/360_F_733502690_GYuQrHyM4W7xxhRW0UPGrySJxJoRnNz4.jpg");
+            justify-content: end;
+            text-align: center;
+            margin: 20px 0;
         }
 
-        /* Kontejner za registracionu formu */
+        nav a {
+            color: #ffffff;
+            margin: 0 15px;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        nav a:hover {
+            color: #f15a24;
+        }
+
         .register-container {
-            background: rgba(255, 255, 255, 0.9);
+            background: rgba(0, 0, 0, 0.8);
             padding: 20px;
             border-radius: 10px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             width: 100%;
             max-width: 400px;
+            margin: auto;
         }
 
-        /* Stilizacija zaglavlja */
         .register-container h2 {
             text-align: center;
             margin-bottom: 20px;
-            color: #333;
+            color: #f15a24;
         }
 
-        /* Stilizacija input polja i dugmeta */
         .register-container input[type="email"],
         .register-container input[type="password"],
         .register-container input[type="text"],
@@ -51,6 +69,8 @@
             margin: 10px 0;
             border: 1px solid #ccc;
             border-radius: 5px;
+            background-color: #333;
+            color: #fff;
         }
 
         .register-container button {
@@ -58,18 +78,48 @@
             padding: 10px;
             margin: 10px 0;
             border: none;
-            background-color: #333;
-            color: #fff;
+            background-color: orange;
+            color: white;
             font-size: 16px;
-            border-radius: 5px;
+            border-radius: 8px;
             cursor: pointer;
+            transition: background-color 0.3s;
         }
 
         .register-container button:hover {
-            background-color: #555;
+            background-color: darkorange;
         }
 
-        /* Responsivni dizajn */
+        footer {
+            background-color: #333;
+            padding: 50px 0;
+            color: #ffffff;
+            text-align: center;
+        }
+
+        footer h3 {
+            font-size: 32px;
+            color: #f15a24;
+            margin-bottom: 20px;
+        }
+
+        footer p {
+            font-size: 16px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        footer .icon {
+            margin-top: 20px;
+            color: #f15a24;
+            font-size: 24px;
+        }
+
+        footer .icon span {
+            margin: 0 15px;
+        }
+
         @media (max-width: 600px) {
             .register-container {
                 padding: 15px;
@@ -86,28 +136,48 @@
     </style>
 </head>
 <body>
-<div class="register-container">
-    <!-- dodati opciju da korisnik izabere ono sto ga zanima -->
-    <a href="http://localhost:3000"><i class="fa fa-arrow-left"></i></a>
-    <h2>Register</h2>
-    <form action="/register" method="POST">
-        <input type="email" name="email" placeholder="Email" required>
-        <input type="password" name="password" placeholder="Password" required>
-        <input type="password" name="confirmPassword" placeholder="Confirm Password" required>
-        <input type="text" name="firstName" placeholder="First Name" required>
-        <input type="text" name="lastName" placeholder="Last Name" required>
-        <input type="text" name="username" placeholder="Username" required>
-        <select name="role" required>
-            <option value="" disabled selected>Select Role</option>
-            <option value="user">User</option>
-            <option value="organizer">Organizer</option>
-        </select>
-        <button type="submit">Register</button>
-    </form>
-    <% if (error) { %>
-        <div class="error"><%= error %></div>
-    <% } %>
-</div>
-</div>
+
+<header>
+    <h1>Registracija</h1>
+</header>
+
+<nav>
+    <a href="http://localhost:3000"><i class="fa fa-arrow-left"></i> Povratak</a>
+</nav>
+
+<main>
+    <div class="register-container">
+        <h2>Register</h2>
+        <form action="/register" method="POST">
+            <input type="email" name="email" placeholder="Email" required>
+            <input type="password" name="password" placeholder="Password" required>
+            <input type="password" name="confirmPassword" placeholder="Confirm Password" required>
+            <input type="text" name="firstName" placeholder="First Name" required>
+            <input type="text" name="lastName" placeholder="Last Name" required>
+            <input type="text" name="username" placeholder="Username" required>
+            <select name="role" required>
+                <option value="" disabled selected>Select Role</option>
+                <option value="user">User</option>
+                <option value="organizer">Organizer</option>
+                <option value="admin">Admin</option>
+            </select>
+            <button type="submit">Register</button>
+        </form>
+        <% if (error) { %>
+            <div class="error"><%= error %></div>
+        <% } %>
+    </div>
+</main>
+
+<footer>
+    <h3>Footer Title</h3>
+    <p>Your footer content goes here.</p>
+    <div class="icon">
+        <span><i class="fab fa-facebook"></i></span>
+        <span><i class="fab fa-twitter"></i></span>
+        <span><i class="fab fa-instagram"></i></span>
+    </div>
+</footer>
+
 </body>
 </html>
