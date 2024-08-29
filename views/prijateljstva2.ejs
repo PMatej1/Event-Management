@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prijatelji</title>
+
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #1c1c1c;
+            color: #ffffff;
+        }
+
+        header {
+            background-color: #000;
+            padding: 20px 0;
+            text-align: center;
+        }
+
+        header h1 {
+            font-size: 36px;
+            color: #f15a24;
+        }
+
+        nav {
+            display: flex;
+            justify-content: start;
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        nav a {
+            color: #ffffff;
+            margin: 0 15px;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        nav a:hover {
+            color: #f15a24;
+        }
+
+        .container {
+            margin-top: 50px;
+            text-align: center;
+        }
+
+        .card-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .card {
+            width: 60%;
+            margin-bottom: 20px;
+            background-color: #333;
+            border: 1px solid #444;
+        }
+
+        .card-body {
+            padding: 20px;
+        }
+
+        .card-title {
+            font-size: 24px;
+            color: #f15a24;
+        }
+
+        .card-text {
+            color: #ffffff;
+        }
+
+        button {
+            background-color: orange;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+            margin: 10px;
+        }
+
+        button:hover {
+            background-color: darkorange;
+        }
+        footer {
+            background-color: #333;
+            padding: 50px 0;
+            color: #ffffff;
+            text-align: center;
+            margin-top: 50px;
+        }
+
+        footer h3 {
+            font-size: 32px;
+            color: #f15a24;
+            margin-bottom: 20px;
+        }
+
+        footer p {
+            font-size: 16px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        footer .icon {
+            margin-top: 20px;
+            color: #f15a24;
+            font-size: 24px;
+        }
+
+        footer .icon span {
+            margin: 0 15px;
+        }
+    </style>
+</head>
+<body>
+<header>
+    <h1>Prijatelji</h1>
+</header>
+<nav>
+    <a href="/korisnik">
+        <i class="fas fa-arrow-left"></i> Povratak
+    </a>
+</nav>
+
+<div class="container">
+    <h2>Moji Prijatelji</h2>
+    <div class="card-wrapper">
+        <% if (prijatelji.length > 0) { prijatelji.forEach(function(prijatelj) { %>
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title"><%= prijatelj.ime %> <%= prijatelj.prezime %></h5>
+                    <p class="card-text"><%= prijatelj.korisnicko_ime %></p>
+                    <form method="post" action='/organizator/obrisi-prijatelja/<%= prijatelj.id %>'>
+                        <button type="submit">Obriši Prijatelja</button>
+                    </form>
+                    <form method="post" action='/organizator/poruka/<%= prijatelj.id %>'> <!-- nemam chat :(-->
+                        <button type="submit">Poruka</button>
+                    </form>
+                </div>
+            </div>
+        <% }) } else { %>
+            <p>Nema odobrenih prijatelja.</p>
+        <% } %>
+    </div>
+
+    <h2>Potencijalni Prijatelji</h2>
+    <div class="card-wrapper">
+        <% if (potencijalni_prijatelji.length > 0) { potencijalni_prijatelji.forEach(function(potencijalni) { %>
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title"><%= potencijalni.ime %> <%= potencijalni.prezime %></h5>
+                    <p class="card-text"><%= potencijalni.korisnicko_ime %></p>
+                    <form method="post" action='/organizator/dodaj-prijatelja/<%= potencijalni.id %>'>
+                        <button type="submit">Pošalji Zahtjev</button>
+                    </form>
+
+                </div>
+            </div>
+        <% }) } else { %>
+            <p>Nema potencijalnih prijatelja.</p>
+        <% } %>
+    </div>
+
+    <h2>Zahtjevi za Prijateljstvo</h2>
+    <div class="card-wrapper">
+        <% if (zahtjevi_za_prijateljstvo.length > 0) { zahtjevi_za_prijateljstvo.forEach(function(zahtjev) { %>
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title"><%= zahtjev.ime %> <%= zahtjev.prezime %></h5>
+                    <p class="card-text"><%= zahtjev.korisnicko_ime %></p>
+                    <form method="post" action='/organizator/prihvati-prijatelja/<%= zahtjev.id %>'>
+                        <button type="submit">Prihvati </button>
+                    </form>
+                    <form method="post" action='/organizator/odbij-prijatelja/<%= zahtjev.id %>'>
+                        <button type="submit">Odbij </button>
+                    </form>
+
+
+                </div>
+            </div>
+        <% }) } else { %>
+            <p>Nema zahtjeva za prijateljstvo.</p>
+        <% } %>
+    </div>
+</div>
+<footer>
+    <h3>EventHub</h3>
+    <p>Pridružite se našoj zajednici na društvenim mrežama ili nas kontaktirajte na info@eventhub.com.</p>
+    <p>© 2024 EventHub. Sva prava zadržana.</p>
+    <div class="icon">
+        <span><i class="fab fa-facebook"></i></span>
+        <span><i class="fab fa-twitter"></i></span>
+        <span><i class="fab fa-instagram"></i></span>
+    </div>
+</footer>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

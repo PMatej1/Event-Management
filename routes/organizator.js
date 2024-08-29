@@ -199,6 +199,81 @@ router.post('/event/:eventId/reject-user/:username', async (req, res) => {
         res.status(500).send('Server Error');
     }
 });
+router.get("/prijateljstva", async (req, res)=>{
+    const id=req.session.userId;
+    try{
+        const prijatelji=await pool.query("select id, ime, prezime, korisnicko_ime from korisnik where id in " +
+            "(select id_prijatelja2 from prijatelji where status=$1 and id_prijatelja1=$2)", ["odobren", id]);
+        const potencijalni_prijatelji=await pool.query("select id, ime, prezime, korisnicko_ime from korisnik where id not in" +
+            "(select id_prijatelja2 from prijatelji where (status=$1 or status =$3) and id_prijatelja1=$2) order by RANDOM() LIMIT 5", ["odobren", id, "u obradi"]);
+        const zahtjevi_za_prijateljstvo=await pool.query("select id, ime, prezime, korisnicko_ime from korisnik where id in" +
+            "(select id_prijatelja1 from prijatelji where status=$1 and id_prijatelja2=$2)", ["u obradi", id])
+        res.render("prijateljstva2", {prijatelji:prijatelji.rows, potencijalni_prijatelji:potencijalni_prijatelji.rows, zahtjevi_za_prijateljstvo:zahtjevi_za_prijateljstvo.rows})
+
+    }catch (err) {
+        console.error(err.message);
+        res.status(500).send('Server Error');
+    }
+
+
+})
+router.post("/dodaj-prijatelja/:id", async (req, res)=>{
+    const id_korisnika=req.session.userId;
+    const {id}=req.params
+    try{
+        await pool.query("insert into prijatelji (id_prijatelja1, id_prijatelja2, status) values ($1,$2,$3)", [id_korisnika, id, "u obradi"])
+        res.redirect("/organizator/prijateljstva")
+    }catch (err) {
+        console.error(err.message);
+        res.status(500).send('Server Error');
+    }
+
+})
+
+router.post("/prihvati-prijatelja/:id", async (req, res)=>{
+    const id_korisnika=req.session.userId;
+    const {id}=req.params
+    try{
+        await pool.query("insert into prijatelji (id_prijatelja1, id_prijatelja2, status) values ($1,$2,$3)", [ id_korisnika, id, "odobren"])
+        await pool.query("update prijatelji set status=$1 where id_prijatelja1=$2 and id_prijatelja2=$3", ["odobren", id, id_korisnika])
+        res.redirect("/organizator/prijateljstva")
+    }catch (err) {
+        console.error(err.message);
+        res.status(500).send('Server Error');
+    }
+
+})
+
+router.post("/odbij-prijatelja/:id", async (req, res)=>{
+    const id_korisnika=req.session.userId;
+    const {id}=req.params
+    try{
+        await pool.query("delete from prijatelji where id_prijatelja1=$1 and id_prijatelja2=$2", [id, id_korisnika])
+        res.redirect("/organizator/prijateljstva")
+
+
+    }catch (err) {
+        console.error(err.message);
+        res.status(500).send('Server Error');
+    }
+
+})
+
+router.post("/obrisi-prijatelja/:id", async (req, res)=>{
+    const id_korisnika=req.session.userId;
+    const {id}=req.params
+    try{
+        await pool.query("delete from prijatelji where id_prijatelja1=$1 and id_prijatelja2=$2", [id, id_korisnika])
+        await pool.query("delete from prijatelji where id_prijatelja1=$2 and id_prijatelja2=$1", [id, id_korisnika])
+        res.redirect("/organizator/prijateljstva")
+
+
+    }catch (err) {
+        console.error(err.message);
+        res.status(500).send('Server Error');
+    }
+
+})
 
 
 module.exports = router;

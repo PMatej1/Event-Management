@@ -5,7 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>EventHub</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-  <style>body {
+  <style>
+    body {
       font-family: 'Arial', sans-serif;
       margin: 0;
       padding: 0;
@@ -20,14 +21,14 @@
     }
 
     header h1 {
-      font-size: 36px;
+      font-size: 48px;
       color: #f15a24;
+      text-shadow: 2px 2px 4px #000;
     }
 
     nav {
       display: flex;
-      justify-content: end;
-      text-align: center;
+      justify-content: flex-end;
       margin: 20px 0;
     }
 
@@ -48,31 +49,36 @@
     }
 
     main h2 {
-      font-size: 48px;
-      margin-bottom: 20px;
+      font-size: 42px;
+      margin-bottom: 30px;
+      color: #f15a24;
+      text-transform: uppercase;
     }
 
     main p {
-      font-size: 18px;
+      font-size: 20px;
       margin-bottom: 40px;
-      max-width: 600px;
+      max-width: 700px;
       margin-left: auto;
       margin-right: auto;
+      line-height: 1.6;
     }
 
-    main .events-button {
-      background-color: #000;
-      border: 2px solid #f15a24;
-      color: #f15a24;
+    button {
+      background-color: orange;
+      color: white;
       padding: 10px 20px;
-      text-transform: uppercase;
-      font-weight: bold;
-      text-decoration: none;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 16px;
+      transition: background-color 0.3s, box-shadow 0.3s;
+      margin: 10px;
     }
 
-    main .events-button:hover {
-      background-color: #f15a24;
-      color: #ffffff;
+    button:hover {
+      background-color: darkorange;
+      box-shadow: 0 0 10px rgba(255, 165, 0, 0.7);
     }
 
     footer {
@@ -104,21 +110,6 @@
     footer .icon span {
       margin: 0 15px;
     }
-    button {
-      background-color: orange;
-      color: white;
-      padding: 10px 20px;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      font-size: 16px;
-      transition: background-color 0.3s;
-      margin: 10px;
-    }
-
-    button:hover {
-      background-color: darkorange;
-    }
   </style>
 </head>
 <body>
@@ -128,12 +119,8 @@
 </header>
 
 <nav>
-
-
   <button><a href="/login">Log in</a></button>
   <button><a href="/register">Registruj se</a></button>
-
-
 </nav>
 
 <main>
