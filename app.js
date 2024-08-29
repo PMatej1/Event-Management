@@ -39,7 +39,7 @@ app.use('/users', usersRouter);
 app.use('/admin', adminRouter);
 app.use("/organizator", organizatorRouter);
 app.use("/korisnik", korisnikRouter);
-app.use("/chat", chatRouter)
+app.use("/chat", chatRouter.router)
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

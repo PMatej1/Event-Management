@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Korisnici</title>
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
     <style>
         body {
             font-family: 'Arial', sans-serif;
@@ -21,20 +22,21 @@
         }
 
         header h1 {
-            font-size: 36px;
+            font-size: 2.5em;
             color: #f15a24;
         }
 
         nav {
             display: flex;
             justify-content: space-between;
-            text-align: center;
-            margin: 20px 0;
+            align-items: center;
+            padding: 10px;
+            background-color: #1c1c1c;
         }
 
         nav a {
             color: #ffffff;
-            margin: 0 15px;
+            margin: 0 10px;
             text-decoration: none;
             font-weight: bold;
         }
@@ -44,12 +46,12 @@
         }
 
         main {
+            padding: 20px;
             text-align: center;
-            padding: 50px 20px;
         }
 
         main h1 {
-            font-size: 36px;
+            font-size: 2em;
             margin-bottom: 20px;
             color: #f15a24;
         }
@@ -59,6 +61,8 @@
             background-color: #333;
             padding: 20px;
             border-radius: 8px;
+            overflow-x: auto;
+
         }
 
         .table {
@@ -90,33 +94,32 @@
 
         footer {
             background-color: #333;
-            padding: 50px 0;
+            padding: 20px 10px;
             color: #ffffff;
             text-align: center;
             margin-top: 50px;
         }
 
         footer h3 {
-            font-size: 32px;
+            font-size: 1.5em;
             color: #f15a24;
-            margin-bottom: 20px;
+            margin-bottom: 10px;
         }
 
         footer p {
-            font-size: 16px;
+            font-size: 0.875em;
             max-width: 600px;
-            margin-left: auto;
-            margin-right: auto;
+            margin: 0 auto;
         }
 
         footer .icon {
             margin-top: 20px;
             color: #f15a24;
-            font-size: 24px;
+            font-size: 1.5em;
         }
 
         footer .icon span {
-            margin: 0 15px;
+            margin: 0 10px;
         }
 
         button {
@@ -126,7 +129,7 @@
             border: none;
             border-radius: 8px;
             cursor: pointer;
-            font-size: 16px;
+            font-size: 1em;
             transition: background-color 0.3s;
             margin: 10px;
         }
@@ -134,6 +137,52 @@
         button:hover {
             background-color: darkorange;
         }
+
+        @media (max-width: 768px) {
+            nav {
+                flex-direction: column;
+            }
+
+            header h1 {
+                font-size: 2em;
+            }
+
+            main h1 {
+                font-size: 1.5em;
+            }
+
+            .table-responsive {
+                padding: 10px;
+            }
+
+            button {
+                width: 100%;
+                margin: 5px 0;
+            }
+        }
+
+        @media (max-width: 480px) {
+            nav a {
+                font-size: 0.875em;
+            }
+
+            header h1 {
+                font-size: 1.75em;
+            }
+
+            footer h3 {
+                font-size: 1.25em;
+            }
+
+            footer p {
+                font-size: 0.75em;
+            }
+
+            .icon {
+                font-size: 1.25em;
+            }
+        }
+
     </style>
 </head>
 <body>

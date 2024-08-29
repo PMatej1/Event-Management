@@ -21,7 +21,7 @@ const isAdmin = (req, res, next) => {
 }
 router.use(isAdmin);
 
-/* GET home page. */
+
 router.get('/', async function(req, res, next) {
     console.log(req.session)
 

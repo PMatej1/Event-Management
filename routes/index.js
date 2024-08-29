@@ -3,7 +3,7 @@ var bcrypt = require("bcrypt")
 var router = express.Router();
 const pool = require('../db');
 
-/* GET home page. */
+
 router.get('/', function(req, res, next) {
   res.render('index');
 });
@@ -20,6 +20,20 @@ router.post('/login', async function(req, res, next) {
     const result = await pool.query('SELECT * FROM korisnik WHERE email = $1', [email]);
     console.log(result.rows);
     if (result.rows.length > 0) {
+      if (result.rows[0].status === "blokiran"){
+        res.render("login", {error:"Vaš račun je blokiran"})
+        return;
+      }
+      else if (result.rows[0].status === "privremeno blokiran"){
+        let danas = new Date();
+        if (danas<result.rows[0].datum_deblokiranja)
+        res.render("login", {error:`Vaš račun je blokiran do ${result.rows[0].datum_deblokiranja} `})
+        return;
+      }
+      else {
+        await pool.query("update korisnik set status=$1, datum_deblokiranja=$2 where id=$3",["aktivan", null, result.rows[0].id])
+      }
+
       let uloga=result.rows[0].uloga;
       let id=result.rows[0].id;
 
@@ -124,7 +138,7 @@ router.post("/register", async (req, res)=>{
   }
 
 })
-// korigovati
+
 router.post('/korisnik/sacuvaj-interese/:id', async (req, res) => {
   try {
     const {id}=req.params;

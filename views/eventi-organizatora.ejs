@@ -4,9 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Moji Eventi</title>
-    <!-- Bootstrap CSS -->
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Font Awesome CSS -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
     <style>
         body {
@@ -63,6 +61,64 @@
             margin-left: auto;
             margin-right: auto;
         }
+        .modal-content {
+            background-color: #1c1c1c;
+            border: 2px solid #f15a24;
+            border-radius: 8px;
+        }
+
+        .modal-header {
+            border-bottom: 1px solid #f15a24;
+        }
+
+        .modal-header .modal-title {
+            color: #f15a24;
+        }
+
+        .modal-header .close {
+            color: #ffffff;
+            opacity: 1;
+        }
+
+        .modal-header .close:hover {
+            color: #f15a24;
+        }
+
+        .modal-body {
+            color: #ffffff;
+        }
+
+        .modal-body .form-control {
+            background-color: #000;
+            color: #ffffff;
+            border: 2px solid #f15a24;
+            border-radius: 8px;
+        }
+
+        .modal-body .form-control:focus {
+            border-color: #f15a24;
+            box-shadow: 0 0 5px #f15a24;
+        }
+
+        .modal-footer {
+            border-top: 1px solid #f15a24;
+        }
+
+        .modal-footer .btn-primary {
+            background-color: #f15a24;
+            border: none;
+            border-radius: 8px;
+            padding: 10px 20px;
+            font-weight: bold;
+            color: #ffffff;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .modal-footer .btn-primary:hover {
+            background-color: #000;
+            color: #f15a24;
+        }
+
 
         .table {
             color: #ffffff;
@@ -113,6 +169,10 @@
             background-color: #f15a24;
             color: #ffffff;
         }
+        .form-control{
+            background-color: #000;
+            color: #ffffff;
+        }
         footer {
             background-color: #333;
             padding: 50px 0;
@@ -158,7 +218,40 @@
 </nav>
 
 <main>
-    <!-- Tabela sa eventima -->
+    <div class="filter-sort-container">
+        <form action="/organizator/eventi" method="GET" class="form-inline justify-content-center mb-4">
+            <div class="form-group mx-sm-3 mb-2">
+                <label for="filterTip" class="mr-2">Tip:</label>
+                <select class="form-control" id="filterTip" name="tip">
+                    <option value="">Svi Tipovi</option>
+                    <% tipovi.forEach(function(tip) { %>
+                        <option value="<%= tip.id %>"><%= tip.naziv_tipa %></option>
+                    <% }) %>
+                </select>
+            </div>
+
+            <div class="form-group mx-sm-3 mb-2">
+                <label for="filterStatus" class="mr-2">Status:</label>
+                <select class="form-control" id="filterStatus" name="status">
+                    <option value="">Svi Statusi</option>
+                    <option value="aktivan">Aktivan</option>
+                    <option value="otkazan">Otkazan</option>
+                </select>
+            </div>
+
+            <div class="form-group mx-sm-3 mb-2">
+                <label for="sortiraj" class="mr-2">Sortiraj po:</label>
+                <select class="form-control" id="sortiraj" name="sortiraj">
+                    <option value="naziv">Nazivu</option>
+                    <option value="datum">Datumu</option>
+                    <option value="cijena">Cijeni</option>
+                </select>
+            </div>
+
+            <button type="submit" class="btn btn-primary mb-2">Primijeni</button>
+        </form>
+    </div>
+
     <div class="table-responsive">
         <table class="table table-bordered table-striped">
             <thead>
@@ -184,18 +277,18 @@
                     <td><%= event.mjesto %></td>
                     <td><%= event.tip %></td>
                     <td>
-                        <!-- Dugme za brisanje -->
+
                         <form action="/organizator/delete-event/<%= event.id %>" method="POST" style="display:inline;">
                             <button type="submit" class="btn btn-delete btn-sm">Delete</button>
                         </form>
 
-                        <!-- Dugme za uređivanje koje otvara modal -->
+
                         <button type="button" class="btn btn-warning btn-sm" data-toggle="modal" data-target="#editModal<%= event.id %>">Uredi</button>
 
-                        <!-- Novo dugme za pregled detalja -->
+
                         <a href="/organizator/event/<%= event.id %>" class="btn btn-info btn-sm">Pogledaj Detalje</a>
 
-                        <!-- Modal za uređivanje -->
+
                         <div class="modal fade" id="editModal<%= event.id %>" tabindex="-1" role="dialog" aria-labelledby="editModalLabel<%= event.id %>" aria-hidden="true">
                             <div class="modal-dialog" role="document">
                                 <div class="modal-content">
@@ -259,7 +352,7 @@
         </table>
     </div>
 
-    <!-- Forma za dodavanje novog eventa -->
+
     <h2 class="text-center mt-5">Dodaj Novi Event</h2>
     <form action="/organizator/dodaj-event" method="POST">
         <div class="form-group">
@@ -315,7 +408,7 @@
     </div>
 </footer>
 
-<!-- Bootstrap JS -->
+
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>

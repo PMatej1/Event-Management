@@ -28,7 +28,7 @@ router.get('/', async (req, res) => {
     console.log(req.session)
     const prijave= await pool.query("select k.ime as ime, k.prezime as prezime,  upit1.id_eventa as id_eventa, upit1.naziv as naziv from korisnik as k" +
         " inner join ( select pk.id_korisnika as id_korisnika, upit.id as id_eventa, upit.naziv as naziv from prijavljeni_korisnici as pk inner join" +
-        "( select id as id, naziv as naziv from event where id_organizatora=$1) as upit on pk.id_eventa=upit.id) as upit1 on k.id=upit1.id_korisnika", [id])
+        "( select id as id, naziv as naziv from event where id_organizatora=$1) as upit on pk.id_eventa=upit.id order by pk.datum_prijave desc limit 5) as upit1 on k.id=upit1.id_korisnika", [id])
     const result = await pool.query('SELECT * FROM korisnik WHERE id = $1', [id]);
    console.log("vazno", result.rows[0])
     res.render('organizator', { organizator: result.rows[0], obavijesti:prijave.rows });
@@ -51,15 +51,41 @@ router.post("/update-profile", async (req, res) =>{
 })
 
 router.get('/eventi', async (req, res) => {
-
+    let { tip, status, sortiraj } = req.query;
+    console.log("query", req.query)
     const id = req.session.userId;
+    let query = 'SELECT event.id as id, event.id_lokacije as id_lokacije, event.naziv as naziv, event.opis as opis, event.datum as datum, event.cijena as cijena, event.status as status, tip_eventa.naziv_tipa as tip ' +
+        'FROM event INNER JOIN tip_eventa ON event.id_tipa = tip_eventa.id WHERE event.id_organizatora = $1';
+
+    if (tip) {
+        query += ` AND event.id_tipa = ${tip}`;
+    }
+
+    if (status) {
+        query += ` AND event.status = '${status}'`;
+    }
+
+    if (sortiraj) {
+        query += ` ORDER BY event.${sortiraj} asc`;
+
+    }
+    console.log(query)
+    console.log("pauza")
+    console.log('select upit.id as id,  upit.naziv as naziv, upit.opis as opis, upit.datum as datum, upit.cijena as cijena, upit.status as status, upit.tip as tip,' +
+        '  lokacija.naziv || \', \' || lokacija.grad || \', \' || lokacija.ulica AS mjesto' +
+        '  from lokacija inner join ' +
+        '('+query+') as upit on upit.id_lokacije=lokacija.id')
     try {
+        let konacni_upit='select upit.id as id,  upit.naziv as naziv, upit.opis as opis, upit.datum as datum, upit.cijena as cijena, upit.status as status, upit.tip as tip,' +
+            '  lokacija.naziv || \', \' || lokacija.grad || \', \' || lokacija.ulica AS mjesto' +
+            '  from lokacija inner join ' +
+            '('+query+') as upit on upit.id_lokacije=lokacija.id '
+        if (sortiraj) {
+            konacni_upit += ` ORDER BY upit.${sortiraj} asc`;
+
+        }
         const eventsResult = await
-            pool.query('select upit.id as id,  upit.naziv as naziv, upit.opis as opis, upit.datum as datum, upit.cijena as cijena, upit.status as status, upit.tip as tip,' +
-                '  lokacija.naziv || \', \' || lokacija.grad || \', \' || lokacija.ulica AS mjesto' +
-                '  from lokacija inner join ' +
-                '(SELECT event.id as id, event.id_lokacije as id_lokacije, event.naziv as naziv, event.opis as opis, event.datum as datum, event.cijena as cijena, event.status as status, tip_eventa.naziv_tipa as tip ' +
-                'FROM event INNER JOIN tip_eventa ON event.id_tipa = tip_eventa.id WHERE event.id_organizatora = $1) as upit on upit.id_lokacije=lokacija.id order by upit.datum asc', [id]);
+            pool.query(konacni_upit, [id]);
         const lokacijeResult = await pool.query('SELECT id, naziv || \', \' || grad || \', \' || ulica AS mjesto FROM lokacija order by grad asc');
         const tipoviResult = await pool.query('SELECT id, naziv_tipa FROM tip_eventa order by naziv_tipa asc');
         res.render('eventi-organizatora', { eventi: eventsResult.rows,lokacije: lokacijeResult.rows,
@@ -88,6 +114,7 @@ router.get("/event/:id", async (req , res)=>{
              zavrsen=true;
              recenzije=await pool.query("select recenzija, komentar from recenzija where id_eventa = $1", [event.rows[0].id])
         }
+
         if (recenzije)
              res.render("event", {event:event, spisak_prijavljenih:spisak_prijavljenih, recenzije:recenzije.rows, zavrsen:zavrsen})
         res.render("event", {event:event, spisak_prijavljenih:spisak_prijavljenih,  zavrsen:zavrsen})
@@ -101,14 +128,13 @@ router.get("/event/:id", async (req , res)=>{
 router.post('/dodaj-event', async (req, res) => {
     console.log(req.body)
     const { naziv, opis, datum, cijena, id_lokacije, id_tipa } = req.body;
-    //const userId = req.session.userId; // Assuming you have user session management
     const id = req.session.userId;
     try {
         await pool.query(
             'INSERT INTO event (naziv, opis, datum, cijena, status, id_lokacije, id_tipa, id_organizatora) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)',
             [naziv, opis, datum, cijena, "aktivan", id_lokacije, id_tipa, id]
         );
-        res.redirect('/organizator/eventi'); // promijeniti ovo
+        res.redirect('/organizator/eventi');
     } catch (err) {
         console.error(err);
         res.status(500).send('Server error');

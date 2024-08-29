@@ -19,7 +19,6 @@ const isUser = (req, res, next) => {
 }
 router.use(isUser);
 
-/* GET users listing. */
 router.get('/', async function(req, res, next) {
     const id = req.session.userId;
     try {
@@ -88,17 +87,20 @@ router.post("/update-profile", async (req, res) =>{
 })
 
 router.get('/feed', async (req, res) => {
-
+    const lokacijeResult = await pool.query('SELECT id, naziv || \', \' || grad || \', \' || ulica AS mjesto FROM lokacija order by grad asc');
+    const tipoviResult = await pool.query('SELECT id, naziv_tipa FROM tip_eventa order by naziv_tipa asc');
 
     const id=req.session.userId;
     try {
         const eventsResult = await
-            pool.query('select upit.id as id,  upit.naziv as naziv, upit.opis as opis, upit.datum as datum, upit.cijena as cijena, upit.status as status, upit.tip as tip,' +
-                '  lokacija.naziv || \', \' || lokacija.grad || \', \' || lokacija.ulica AS mjesto' +
-                '  from lokacija inner join ' +
+            pool.query('SELECT upit.id as id, upit.naziv as naziv, upit.opis as opis, upit.datum as datum, upit.cijena as cijena, upit.status as status, upit.tip as tip, ' +
+                'lokacija.naziv || \', \' || lokacija.grad || \', \' || lokacija.ulica AS mjesto ' +
+                'FROM lokacija INNER JOIN ' +
                 '(SELECT event.id as id, event.id_lokacije as id_lokacije, event.naziv as naziv, event.opis as opis, event.datum as datum, event.cijena as cijena, event.status as status, tip_eventa.naziv_tipa as tip ' +
-                'FROM event INNER JOIN tip_eventa ON event.id_tipa = tip_eventa.id where event.id not in' +
-                ' (select id_eventa from prijavljeni_korisnici where id_korisnika=$1)) as upit on upit.id_lokacije=lokacija.id order by upit.datum asc', [id]);
+                'FROM event INNER JOIN tip_eventa ON event.id_tipa = tip_eventa.id WHERE event.id NOT IN ' +
+                '(SELECT id_eventa FROM prijavljeni_korisnici WHERE id_korisnika=$1)) as upit ON upit.id_lokacije = lokacija.id ' +
+                'ORDER BY RANDOM() ' +
+                'LIMIT 5', [id]);
         const najbolje_ocijenjeni_zavrseni_eventi=await
             pool.query(`SELECT upit.id AS id, upit.naziv AS naziv, upit.opis AS opis, upit.datum AS datum, 
        upit.cijena AS cijena, upit.status AS status, upit.tip AS tip, 
@@ -199,7 +201,8 @@ ORDER BY
                 '(select id_tipa from interesi_korisnika where id_korisnika = $1) order by upit.datum asc', [id]);
 
         res.render('feed', { eventi: eventsResult.rows, najpopularniji_eventi:najpopularniji_eventi.rows,
-            najbolje_ocijenjeni_zavrseni_eventi:najbolje_ocijenjeni_zavrseni_eventi.rows, recommendedEventi:recommendedEventi.rows})
+            najbolje_ocijenjeni_zavrseni_eventi:najbolje_ocijenjeni_zavrseni_eventi.rows, recommendedEventi:recommendedEventi.rows, lokacije: lokacijeResult.rows,
+            tipovi: tipoviResult.rows})
     }catch (err) {
         console.error(err);
         res.status(500).send('Server error');

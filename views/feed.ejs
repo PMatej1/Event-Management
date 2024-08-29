@@ -6,7 +6,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Eventi</title>
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Font Awesome CSS -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
     <style>
         body {
@@ -126,6 +125,39 @@
 
 <main>
     <h1 class="text-center">Preporučeni eventi</h1>
+    <div class="filter-sort-container">
+        <form action="/organizator/eventi" method="GET" class="form-inline justify-content-center mb-4">
+            <div class="form-group mx-sm-3 mb-2">
+                <label for="filterTip" class="mr-2">Tip:</label>
+                <select class="form-control" id="filterTip" name="tip">
+                    <option value="">Svi Tipovi</option>
+                    <% tipovi.forEach(function(tip) { %>
+                        <option value="<%= tip.id %>"><%= tip.naziv_tipa %></option>
+                    <% }) %>
+                </select>
+            </div>
+
+            <div class="form-group mx-sm-3 mb-2">
+                <label for="filterStatus" class="mr-2">Status:</label>
+                <select class="form-control" id="filterStatus" name="status">
+                    <option value="">Svi Statusi</option>
+                    <option value="aktivan">Aktivan</option>
+                    <option value="otkazan">Otkazan</option>
+                </select>
+            </div>
+
+            <div class="form-group mx-sm-3 mb-2">
+                <label for="sortiraj" class="mr-2">Sortiraj po:</label>
+                <select class="form-control" id="sortiraj" name="sortiraj">
+                    <option value="naziv">Nazivu</option>
+                    <option value="datum">Datumu</option>
+                    <option value="cijena">Cijeni</option>
+                </select>
+            </div>
+
+            <button type="submit" class="btn btn-primary mb-2">Primijeni</button>
+        </form>
+    </div>
     <div class="card-wrapper">
         <% recommendedEventi.forEach(function(event) { %>
             <div class="card">
@@ -172,6 +204,25 @@
                     <p class="card-text"><small class="text-muted">Broj prijava: <%= event.broj_prijava %></small></p>
                     <form action="prijava-na-event/<%= event.id %>" method="post">
                     <button class="btn btn-register" type="submit"> Prijavi se</button>
+                    </form>
+                </div>
+            </div>
+        <% }) %>
+    </div>
+
+    <h2 class="text-center"> Možda Vam se svidi</h2>
+    <div class="card-wrapper">
+        <% eventi.forEach(function(event) { %>
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title"><%= event.naziv %></h5>
+                    <p class="card-text"><%= event.opis %></p>
+                    <p class="card-text"><small class="text-muted">Datum: <%= event.datum %></small></p>
+                    <p class="card-text"><small class="text-muted">Lokacija: <%= event.mjesto %></small></p>
+                    <p class="card-text"><small class="text-muted">Cijena: <%= event.cijena %> KM</small></p>
+                    <p class="card-text"><small class="text-muted">Broj prijava: <%= event.broj_prijava %></small></p>
+                    <form action="prijava-na-event/<%= event.id %>" method="post">
+                        <button class="btn btn-register" type="submit"> Prijavi se</button>
                     </form>
                 </div>
             </div>

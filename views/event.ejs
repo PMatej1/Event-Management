@@ -4,9 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Detalji Eventa</title>
-    <!-- Bootstrap CSS -->
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Font Awesome CSS -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
     <style>
         body {
@@ -146,15 +144,16 @@
     </style>
 </head>
 <body>
+<header>
+    <h1>Detalji o eventu: <%=event.rows[0].naziv%></h1>
+</header>
+<nav>
+    <a href="/organizator/eventi">
+        <i class="fas fa-arrow-left"></i> Povratak
+    </a>
+</nav>
 <div class="container">
-    <header>
-        <h1>Detalji o eventu: <%=event.rows[0].naziv%></h1>
-    </header>
-    <nav>
-        <a href="/organizator/eventi">
-            <i class="fas fa-arrow-left"></i> Povratak
-        </a>
-    </nav>
+
     <div class="card">
         <div class="card-header">
             <h2><%= event.rows[0].naziv %></h2>
@@ -242,7 +241,6 @@
     </div>
 </footer>
 
-<!-- Bootstrap JS and dependencies -->
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>

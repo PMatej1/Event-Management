@@ -4,9 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Statistika</title>
-    <!-- Bootstrap CSS -->
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Chart.js CDN -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
@@ -15,8 +13,8 @@
             display: flex;
             min-height: 100vh;
             flex-direction: column;
-            background-color: #121212; /* Dark theme background */
-            color: #ffffff; /* Light text color for contrast */
+            background-color: #121212;
+            color: #ffffff;
         }
         .container {
             flex: 1;
@@ -57,12 +55,12 @@
         }
         .chart-container {
             margin-top: 20px;
-            background-color: #1f1f1f; /* Dark background for charts */
+            background-color: #1f1f1f;
             padding: 15px;
-            border-radius: 10px; /* Rounded corners for charts */
+            border-radius: 10px;
         }
         h1, h3 {
-            color: #ff6600; /* Orange accent for headings */
+            color: #ff6600;
         }
 
         footer {
@@ -111,55 +109,55 @@
         <div class="container">
             <h1 class="text-center">Statistika</h1>
 
-            <!-- Ukupni podaci -->
+
             <div id="ukupniPodaci" class="chart-container">
                 <h3>Ukupni podaci</h3>
                 <canvas id="ukupniPodaciChart"></canvas>
             </div>
 
-            <!-- Nadolazeći eventi -->
+
             <div id="nadolazeciEventi" class="chart-container">
                 <h3>Nadolazeći eventi sa najviše prijava</h3>
                 <canvas id="nadolazeciEventiChart"></canvas>
             </div>
 
-            <!-- Završeni eventi -->
+
             <div id="zavrseniEventi" class="chart-container">
                 <h3>Završeni eventi sa najviše prijava</h3>
                 <canvas id="zavrseniEventiChart"></canvas>
             </div>
 
-            <!-- Organizatori -->
+
             <div id="organizatori" class="chart-container">
                 <h3>Organizatori sa najviše evenata</h3>
                 <canvas id="organizatoriChart"></canvas>
             </div>
 
-            <!-- Korisnici -->
+
             <div id="korisnici" class="chart-container">
                 <h3>Korisnici sa najviše prihvatanja i odbijanja</h3>
                 <canvas id="korisniciChart"></canvas>
             </div>
 
-            <!-- Gradovi -->
+
             <div id="gradovi" class="chart-container">
                 <h3>Gradovi sa najviše evenata</h3>
                 <canvas id="gradoviChart"></canvas>
             </div>
 
-            <!-- Tipovi evenata -->
+
             <div id="tipoviEvenata" class="chart-container">
                 <h3>Tipovi evenata sa najviše evenata</h3>
                 <canvas id="tipoviEvenataChart"></canvas>
             </div>
 
-            <!-- Najbolje ocijenjeni eventi -->
+
             <div id="najboljeOcijenjeniEventi" class="chart-container">
                 <h3>Najbolje ocijenjeni eventi</h3>
                 <canvas id="najboljeOcijenjeniEventiChart"></canvas>
             </div>
 
-            <!-- Tipovi evenata za koje se korisnici odlučuju najviše -->
+
             <div id="tipoviEvenataZaKojeSeKorisniciOdlucujuNajvise" class="chart-container">
                 <h3>Tipovi evenata za koje se korisnici odlučuju najviše</h3>
                 <canvas id="tipoviEvenataZaKojeSeKorisniciOdlucujuNajviseChart"></canvas>
@@ -179,7 +177,7 @@
     </div>
 </footer>
 
-<!-- Bootstrap JS and dependencies -->
+
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
@@ -199,7 +197,7 @@
     const najboljeOcijenjeniEventi = JSON.parse('<%- najboljeOcijenjeniEventi %>');
     const tipoviEvenataZaKojeSeKorisniciOdlucujuNajvise = JSON.parse('<%- tipoviEvenataZaKojeSeKorisniciOdlucujuNajvise %>');
 
-    // Primer generisanja grafikona
+
     const ctxUkupniPodaci = document.getElementById('ukupniPodaciChart').getContext('2d');
     new Chart(ctxUkupniPodaci, {
         type: 'bar',
@@ -232,7 +230,7 @@
         }
     });
 
-    // Nadolazeći eventi sa najviše prijava
+
     const ctxNadolazeciEventi = document.getElementById('nadolazeciEventiChart').getContext('2d');
     new Chart(ctxNadolazeciEventi, {
         type: 'bar',
@@ -256,7 +254,7 @@
     });
 
 
-    // Završeni eventi sa najviše prijava
+
     const ctxZavrseniEventi = document.getElementById('zavrseniEventiChart').getContext('2d');
     new Chart(ctxZavrseniEventi, {
         type: 'bar',
@@ -279,7 +277,7 @@
         }
     });
 
-    // Organizatori sa najviše evenata
+
     const ctxOrganizatori = document.getElementById('organizatoriChart').getContext('2d');
     new Chart(ctxOrganizatori, {
         type: 'bar',
@@ -302,7 +300,7 @@
         }
     });
 
-    // Korisnici sa najviše prihvatanja i odbijanja
+
     const ctxKorisnici = document.getElementById('korisniciChart').getContext('2d');
     new Chart(ctxKorisnici, {
         type: 'bar',
@@ -332,7 +330,7 @@
         }
     });
 
-    // Gradovi sa najviše evenata
+
     const ctxGradovi = document.getElementById('gradoviChart').getContext('2d');
     new Chart(ctxGradovi, {
         type: 'bar',
@@ -355,7 +353,7 @@
         }
     });
 
-    // Tipovi evenata sa najviše evenata
+
     const ctxTipoviEvenata = document.getElementById('tipoviEvenataChart').getContext('2d');
     new Chart(ctxTipoviEvenata, {
         type: 'bar',
@@ -378,7 +376,7 @@
         }
     });
 
-    // Najbolje ocijenjeni eventi
+
     const ctxNajboljeOcijenjeniEventi = document.getElementById('najboljeOcijenjeniEventiChart').getContext('2d');
     new Chart(ctxNajboljeOcijenjeniEventi, {
         type: 'bar',
@@ -401,7 +399,7 @@
         }
     });
 
-    // Tipovi evenata za koje se korisnici odlučuju najviše
+
     const ctxTipoviEvenataZaKojeSeKorisniciOdlucujuNajvise = document.getElementById('tipoviEvenataZaKojeSeKorisniciOdlucujuNajviseChart').getContext('2d');
     new Chart(ctxTipoviEvenataZaKojeSeKorisniciOdlucujuNajvise, {
         type: 'bar',

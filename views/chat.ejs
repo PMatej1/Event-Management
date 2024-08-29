@@ -4,105 +4,87 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Chat</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <style>
-    body {
-    background-color: #121212;
-    color: #ffffff;
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    }
-
-    .chat-container {
-    width: 90%;
-    max-width: 600px;
-    background-color: #1e1e1e;
-    border-radius: 10px;
-    padding: 20px;
-    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
-    }
-
-    #chat-window {
-    height: 300px;
-    overflow-y: scroll;
-    margin-bottom: 10px;
-    border: 1px solid #ff6600;
-    border-radius: 5px;
-    padding: 10px;
-    background-color: #2e2e2e;
-    }
-
-    #output, #feedback {
-    padding: 5px;
-    }
-
-    #message {
-    width: calc(100% - 100px);
-    padding: 10px;
-    border: 1px solid #ff6600;
-    border-radius: 5px;
-    background-color: #333;
-    color: #fff;
-    }
-
-    .chat-button {
-    width: 80px;
-    background-color: #ff6600;
-    border: none;
-    border-radius: 5px;
-    color: #ffffff;
-    padding: 10px;
-    cursor: pointer;
-    }
-
-    .chat-button:hover {
-    background-color: #cc5200;
-    }
+        body {
+            background-color: #1c1c1c;
+            color: #ffffff;
+            font-family: Arial, sans-serif;
+        }
+        #messages {
+            list-style-type: none;
+            padding: 0;
+            height: 300px;
+            overflow-y: auto;
+            margin-bottom: 20px;
+            border: 1px solid #f15a24;
+            background-color: #333;
+        }
+        #messages li {
+            padding: 10px;
+            margin: 5px 0;
+            background-color: #444;
+            border-radius: 5px;
+        }
+        #chat-form {
+            display: flex;
+        }
+        #m {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #f15a24;
+            border-radius: 5px;
+        }
+        button {
+            padding: 10px 15px;
+            border: none;
+            background-color: #f15a24;
+            color: white;
+            border-radius: 5px;
+            margin-left: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: darkorange;
+        }
     </style>
-
 </head>
 <body>
-<div class="chat-container">
-    <div id="chat-window">
-        <div id="output"></div>
-        <div id="feedback"></div>
-    </div>
-    <input id="message" type="text" placeholder="Unesite poruku..." autocomplete="off">
-    <button id="send" class="chat-button">Pošalji</button>
+
+<div class="container">
+    <h1 class="text-center">Chat</h1>
+    <ul id="messages"></ul>
+    <form id="chat-form" action="">
+        <input id="m" autocomplete="off" placeholder="Unesite vašu poruku..." />
+        <button type="submit">Pošalji</button>
+    </form>
 </div>
 
+<script src="/node_modules/socket.io/client-dist/socket.io.js"></script>
 <script src="/socket.io/socket.io.js"></script>
-<script >
+
+<script>
     const socket = io();
 
-    const message = document.getElementById('message');
-    const output = document.getElementById('output');
-    const feedback = document.getElementById('feedback');
-    const sendButton = document.getElementById('send');
-
-    sendButton.addEventListener('click', () => {
-        socket.emit('chat', {
-            message: message.value
-        });
-        message.value = '';
+    // Šalje poruku kada se pošalje forma
+    document.getElementById('chat-form').addEventListener('submit', function(e) {
+        e.preventDefault(); // Spriječi osvježavanje stranice
+        const msg = document.getElementById('m').value;
+        if (msg) {
+            socket.emit('chat message', msg);
+            document.getElementById('m').value = ''; // Očisti input
+        }
+        return false;
     });
 
-    message.addEventListener('keypress', () => {
-        socket.emit('typing');
-    });
-
-    socket.on('chat', (data) => {
-        feedback.innerHTML = '';
-        output.innerHTML += `<p><strong>${data.user}:</strong> ${data.message}</p>`;
-    });
-
-    socket.on('typing', (data) => {
-        feedback.innerHTML = `<p><em>${data.user} is typing...</em></p>`;
+    // Prijem poruka
+    socket.on('chat message', function(msg) {
+        const item = document.createElement('li');
+        item.textContent = msg;
+        document.getElementById('messages').appendChild(item);
+        window.scrollTo(0, document.body.scrollHeight); // Automatski skroluj na dno
     });
 </script>
+
 </body>
 </html>
